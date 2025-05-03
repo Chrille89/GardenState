@@ -14,83 +14,131 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.bach.gardenstate.features.overview.model.SoilMoistureSensorData
+import com.bach.gardenstate.features.overview.model.WaterValveData
+import com.bach.gardenstate.features.overview.viewmodel.OverviewScreenViewModel
 import com.bach.gardenstate.ui.theme.GardenStateTheme
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
+import kotlinx.datetime.toLocalDateTime
+
 
 @Composable
-fun OverviewScreen(modifier: Modifier = Modifier) {
+fun OverviewScreen(
+    modifier: Modifier = Modifier,
+    overviewScreenViewModel: OverviewScreenViewModel = viewModel()
+) {
+    val sensorData: SoilMoistureSensorData = overviewScreenViewModel.message.value
     Scaffold(modifier) { paddings ->
         Column(
-            Modifier.padding(paddings).fillMaxSize(),
+            Modifier
+                .padding(paddings)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
-            ) {
+        ) {
             Row(
-                Modifier.fillMaxWidth().weight(1f),
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
                 horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+            ) {
                 Column(
-                    Modifier.weight(1f).fillMaxSize().background(Color.Green),
+                    Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(Color.Green),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
 
                 ) {
-                    Text("Möhren")
+                    Text("Möhren", color = Color.Black)
                 }
                 Column(
-                    Modifier.weight(1f).fillMaxSize().background(Color.Yellow),
+                    Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(Color.Yellow),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text("Kartoffeln")
+                    Text("Kartoffeln", color = Color.Black)
                 }
 
             }
             Row(
-                Modifier.fillMaxWidth().weight(1f),
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
-                    Modifier.weight(1f).fillMaxSize().background(Color.Red),
+                    Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(overviewScreenViewModel.backgroundColor.value),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text("Zwiebeln")
+                    val dateTime: LocalDateTime = Instant.parse(sensorData.last_seen)
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                    overviewScreenViewModel.setBackGroundColorBySoilMoisture(sensorData.soil_moisture)
+                    Text("Zwiebeln", color = Color.Black)
+                    Text("Aktualisiert: ${formatDateTime(dateTime)}", color = Color.Black)
+
                 }
                 Column(
-                    Modifier.weight(1f).fillMaxSize().background(Color.Red),
+                    Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(Color.Red),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text("Mangold")
+                    Text("Mangold", color = Color.Black)
                 }
 
             }
             Row(
-                Modifier.fillMaxWidth().weight(1f),
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
                 horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+            ) {
                 Column(
-                    Modifier.weight(1f).fillMaxSize().background(Color.Red),
+                    Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(Color.Red),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text("Kohl")
+                    Text("Kohl", color = Color.Black)
                 }
                 Column(
-                    Modifier.weight(1f).fillMaxSize().background(Color.Red),
+                    Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(Color.Red),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text("Rettich")
+                    Text("Rettich", color = Color.Black)
                 }
 
             }
         }
-
-
-
-
     }
+}
 
+
+@OptIn(FormatStringsInDatetimeFormats::class)
+fun formatDateTime(time: LocalDateTime): String {
+    val format = LocalDateTime.Format { byUnicodePattern("dd.MM.yy HH:mm") }
+    return format.format(time)
 }
 
 @Composable
