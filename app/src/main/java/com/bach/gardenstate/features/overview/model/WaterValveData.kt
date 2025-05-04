@@ -7,6 +7,6 @@ data class WaterValveData(
     val battery: Int,
     val last_seen: String,
     val linkquality: Int,
-    val state: String,
+    var state: String,
     val water_consumed: Int
 )

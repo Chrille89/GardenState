@@ -3,16 +3,33 @@ package com.bach.gardenstate.features.overview.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bach.gardenstate.features.overview.model.SoilMoistureSensorData
+import com.bach.gardenstate.features.overview.model.WaterValveData
 import com.bach.gardenstate.features.overview.viewmodel.OverviewScreenViewModel
 import com.bach.gardenstate.ui.theme.GardenStateTheme
 import com.bach.gardenstate.utils.DateFormatter
@@ -22,27 +39,60 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OverviewScreen(
     modifier: Modifier = Modifier,
     overviewScreenViewModel: OverviewScreenViewModel = viewModel()
 ) {
-    val soilMoistureSensorData: SoilMoistureSensorData = overviewScreenViewModel.message.value
-    Scaffold(modifier) { paddings ->
+    val waterValveDataState : WaterValveData = overviewScreenViewModel.messageWaterValveSensor.value
+    val soilMoistureSensorDataState: SoilMoistureSensorData = overviewScreenViewModel.messageSoilMoistureSensor.value
+
+    Scaffold(
+        modifier,
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("GardenState")}
+            )
+        },
+        ) { paddings ->
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(paddings)
-                .background(overviewScreenViewModel.backgroundColor.value),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(10.dp)
         ) {
-            val dateTime: LocalDateTime = Instant.parse(soilMoistureSensorData.last_seen)
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-            Text("Gemüsebeet")
-            Text("Bodenfeuchte: ${soilMoistureSensorData.soil_moisture} %")
-            Text("Stand: ${DateFormatter.formatDateTime(dateTime)}")
+            Row(
+                Modifier.fillMaxWidth().padding(vertical = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text("Bewässerung", fontWeight = FontWeight.Bold)
+                var checked by remember { mutableStateOf(true) }
+                Switch(
+                    checked = waterValveDataState.state == "ON",
+                    onCheckedChange = {
+                        overviewScreenViewModel.onChangeWaterValveState(it)
+                    }
+                )
+            }
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(40.dp))
+                    .background(overviewScreenViewModel.backgroundColor.value),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                val dateTime: LocalDateTime = Instant.parse(soilMoistureSensorDataState.last_seen)
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                Text("Gemüsebeet", color = Color.Black)
+                Text("Bodenfeuchte: ${soilMoistureSensorDataState.soil_moisture} %",color = Color.Black)
+                Text("Stand: ${DateFormatter.formatDateTime(dateTime)}",color = Color.Black)
+            }
         }
+
     }
 }
 

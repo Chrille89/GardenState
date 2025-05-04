@@ -19,46 +19,77 @@ class OverviewScreenViewModel : ViewModel() {
     private val mqttServerUri: String = "tcp://192.168.188.21:1883"
     private val interviewTopic: String = "zigbee2mqtt/bridge/request/device/interview"
     private val soilMoistureMqttTopic: String = "zigbee2mqtt/SoilMoistureSensor"
+    private val waterValveMqttTopic: String = "zigbee2mqtt/Watervalve"
 
-    private val _message: MutableState<SoilMoistureSensorData> = mutableStateOf(
-        SoilMoistureSensorData(50,"2025-05-03T22:27:46+02:00",32,38,20)
+    private val _messageWaterValveSensor: MutableState<WaterValveData> = mutableStateOf(
+        WaterValveData(50, "2025-05-03T22:27:46+02:00", 32, "OFF", 100)
     )
-    val message: State<SoilMoistureSensorData> = _message
+    val messageWaterValveSensor: State<WaterValveData> = _messageWaterValveSensor
+
+    private val _messageSoilMoistureSensor: MutableState<SoilMoistureSensorData> = mutableStateOf(
+        SoilMoistureSensorData(50, "2025-05-03T22:27:46+02:00", 32, 38, 20)
+    )
+    val messageSoilMoistureSensor: State<SoilMoistureSensorData> = _messageSoilMoistureSensor
 
     private val _backgroundColor: MutableState<Color> = mutableStateOf(
-    Color.Red
+        Color.Red
     )
     val backgroundColor: State<Color> = _backgroundColor
 
-    init {
-        initSoilMoistureTopicSubscriber()
-        interviewSoilMoistureSensor()
+    private val waterValveMqttClientManager = MqttClientManager(
+        mqttServerUri,
+        "$waterValveMqttTopic/set"
+    ) { message ->
+        Log.d("OverviewScreenViewModel", "message: $message.value")
     }
 
-    private fun initSoilMoistureTopicSubscriber() {
-        MqttClientManager(mqttServerUri, soilMoistureMqttTopic)
+    init {
+        subscribeWaterValve()
+        subscribeSoilMoistureSensor()
+        interviewMqttDevices()
+    }
+
+    private fun subscribeWaterValve() {
+        MqttClientManager(mqttServerUri, waterValveMqttTopic)
         { message ->
-            _message.value = withUnknownKeys.decodeFromString<SoilMoistureSensorData>(message)
-            Log.d("OverviewScreenViewModel", "message: $_message.value")
-            setBackGroundColorBySoilMoisture(_message.value.soil_moisture)
+            _messageWaterValveSensor.value =
+                withUnknownKeys.decodeFromString<WaterValveData>(message)
         }
     }
 
-    private fun interviewSoilMoistureSensor() {
-         val interviewMqttClientManager = MqttClientManager(mqttServerUri, interviewTopic)
+    private fun subscribeSoilMoistureSensor() {
+        MqttClientManager(mqttServerUri, soilMoistureMqttTopic)
+        { message ->
+            _messageSoilMoistureSensor.value =
+                withUnknownKeys.decodeFromString<SoilMoistureSensorData>(message)
+            setBackGroundColorBySoilMoisture(_messageSoilMoistureSensor.value.soil_moisture)
+        }
+    }
+
+    private fun interviewMqttDevices() {
+        val interviewMqttClientManager = MqttClientManager(mqttServerUri, interviewTopic)
         { message ->
             Log.d("OverviewScreenViewModel", "message: $message.value")
         }
-        interviewMqttClientManager.publish( "{\"id\": \"SoilMoistureSensor\"}")
+        interviewMqttClientManager.publish("{\"id\": \"Watervalve\"}")
+        interviewMqttClientManager.publish("{\"id\": \"SoilMoistureSensor\"}")
         interviewMqttClientManager.disconnect()
     }
 
+    fun onChangeWaterValveState(checked: Boolean) {
+        if (checked) {
+            waterValveMqttClientManager.publish("{\"state\":\"ON\"}")
+        } else {
+            waterValveMqttClientManager.publish("{\"state\":\"OFF\"}")
+        }
+    }
+
     private fun setBackGroundColorBySoilMoisture(soilMoisture: Int) {
-        when(soilMoisture) {
+        when (soilMoisture) {
             in 0..20 -> _backgroundColor.value = Color.Red
-            in 20..40  -> _backgroundColor.value = Color.Yellow
-            in 40..60  -> _backgroundColor.value = LightGreen
-            else -> _backgroundColor.value =  Color.Green
+            in 20..40 -> _backgroundColor.value = Color.Yellow
+            in 40..60 -> _backgroundColor.value = LightGreen
+            else -> _backgroundColor.value = Color.Green
         }
     }
 }
