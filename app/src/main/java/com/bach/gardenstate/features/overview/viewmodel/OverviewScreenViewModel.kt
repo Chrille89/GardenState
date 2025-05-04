@@ -16,13 +16,11 @@ import kotlinx.serialization.json.Json
 
 class OverviewScreenViewModel : ViewModel() {
     private val withUnknownKeys = Json { ignoreUnknownKeys = true }
-
     private val mqttServerUri: String = "tcp://192.168.188.21:1883"
     private val interviewTopic: String = "zigbee2mqtt/bridge/request/device/interview"
-    private val mqttTopic: String = "zigbee2mqtt/SoilMoistureSensor"
+    private val soilMoistureMqttTopic: String = "zigbee2mqtt/SoilMoistureSensor"
 
     private val _message: MutableState<SoilMoistureSensorData> = mutableStateOf(
-       // WaterValveData(50, "2025-05-03T22:27:46+02:00", 32, "OFF", 50)
         SoilMoistureSensorData(50,"2025-05-03T22:27:46+02:00",32,38,20)
     )
     val message: State<SoilMoistureSensorData> = _message
@@ -32,26 +30,30 @@ class OverviewScreenViewModel : ViewModel() {
     )
     val backgroundColor: State<Color> = _backgroundColor
 
-    private val interviewMqttClientManager: MqttClientManager = MqttClientManager(mqttServerUri, interviewTopic)
-    { message ->
-        Log.d("OverviewScreenViewModel", "message: $message.value")
-    }
-
-    private val mqttClientManager: MqttClientManager = MqttClientManager(mqttServerUri, mqttTopic)
-    { message ->
-        _message.value = withUnknownKeys.decodeFromString<SoilMoistureSensorData>(message)
-        Log.d("OverviewScreenViewModel", "message: $_message.value")
-    }
-
     init {
+        initSoilMoistureTopicSubscriber()
         interviewSoilMoistureSensor()
     }
 
-    private fun interviewSoilMoistureSensor() {
-        interviewMqttClientManager.publish( "{\"id\": \"SoilMoistureSensor\"}")
+    private fun initSoilMoistureTopicSubscriber() {
+        MqttClientManager(mqttServerUri, soilMoistureMqttTopic)
+        { message ->
+            _message.value = withUnknownKeys.decodeFromString<SoilMoistureSensorData>(message)
+            Log.d("OverviewScreenViewModel", "message: $_message.value")
+            setBackGroundColorBySoilMoisture(_message.value.soil_moisture)
+        }
     }
 
-     fun setBackGroundColorBySoilMoisture(soilMoisture: Int) {
+    private fun interviewSoilMoistureSensor() {
+         val interviewMqttClientManager = MqttClientManager(mqttServerUri, interviewTopic)
+        { message ->
+            Log.d("OverviewScreenViewModel", "message: $message.value")
+        }
+        interviewMqttClientManager.publish( "{\"id\": \"SoilMoistureSensor\"}")
+        interviewMqttClientManager.disconnect()
+    }
+
+    private fun setBackGroundColorBySoilMoisture(soilMoisture: Int) {
         when(soilMoisture) {
             in 0..20 -> _backgroundColor.value = Color.Red
             in 20..40  -> _backgroundColor.value = Color.Yellow
