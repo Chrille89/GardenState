@@ -18,6 +18,7 @@ class OverviewScreenViewModel : ViewModel() {
     private val withUnknownKeys = Json { ignoreUnknownKeys = true }
 
     private val mqttServerUri: String = "tcp://192.168.188.21:1883"
+    private val interviewTopic: String = "zigbee2mqtt/bridge/request/device/interview"
     private val mqttTopic: String = "zigbee2mqtt/SoilMoistureSensor"
 
     private val _message: MutableState<SoilMoistureSensorData> = mutableStateOf(
@@ -31,12 +32,24 @@ class OverviewScreenViewModel : ViewModel() {
     )
     val backgroundColor: State<Color> = _backgroundColor
 
-    private val mqttClientManager: MqttClientManager =
-        MqttClientManager(mqttServerUri, mqttTopic) { message ->
-            _message.value = withUnknownKeys.decodeFromString<SoilMoistureSensorData>(message)
-            Log.d("OverviewScreenViewModel", "message: $_message.value")
+    private val interviewMqttClientManager: MqttClientManager = MqttClientManager(mqttServerUri, interviewTopic)
+    { message ->
+        Log.d("OverviewScreenViewModel", "message: $message.value")
+    }
 
-        }
+    private val mqttClientManager: MqttClientManager = MqttClientManager(mqttServerUri, mqttTopic)
+    { message ->
+        _message.value = withUnknownKeys.decodeFromString<SoilMoistureSensorData>(message)
+        Log.d("OverviewScreenViewModel", "message: $_message.value")
+    }
+
+    init {
+        interviewSoilMoistureSensor()
+    }
+
+    private fun interviewSoilMoistureSensor() {
+        interviewMqttClientManager.publish( "{\"id\": \"SoilMoistureSensor\"}")
+    }
 
      fun setBackGroundColorBySoilMoisture(soilMoisture: Int) {
         when(soilMoisture) {
