@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bach.gardenstate.features.overview.model.SoilMoistureSensorData
+import com.bach.gardenstate.features.overview.model.TemperatureSensorGreenhouse
 import com.bach.gardenstate.features.overview.model.WaterValveData
 import com.bach.gardenstate.features.overview.viewmodel.OverviewScreenViewModel
 import com.bach.gardenstate.ui.theme.GardenStateTheme
@@ -50,6 +51,7 @@ fun OverviewScreen(
 ) {
     val waterValveDataState : WaterValveData = overviewScreenViewModel.messageWaterValveSensor.value
     val soilMoistureSensorDataState: SoilMoistureSensorData = overviewScreenViewModel.messageSoilMoistureSensor.value
+    val temperatureSensorGreenhouseState: TemperatureSensorGreenhouse = overviewScreenViewModel.messageTemperatureSensorGreenhouse.value
 
     Scaffold(
         modifier,
@@ -87,21 +89,21 @@ fun OverviewScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text("Bodentemperatur")
-                        Text(soilMoistureSensorDataState.temperature.toString())
-                    }
+                        Text("${soilMoistureSensorDataState.temperature} °C")                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text("Verbindungs-Qualität Sensor")
-                        Text(soilMoistureSensorDataState.linkquality.toString())
+                        Text("${soilMoistureSensorDataState.linkquality}")
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text("Ladestand Sensor")
-                        Text(soilMoistureSensorDataState.battery.toString())
+                        Text("${soilMoistureSensorDataState.battery} %")
+
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -139,7 +141,7 @@ fun OverviewScreen(
 
             ) {
                 Column(modifier = Modifier.padding(5.dp)) {
-                    val dateTime: LocalDateTime = Instant.parse(soilMoistureSensorDataState.last_seen)
+                    val dateTime: LocalDateTime = Instant.parse(temperatureSensorGreenhouseState.last_seen)
                         .toLocalDateTime(TimeZone.currentSystemDefault())
                     Text("Gewächshaus", style = MaterialTheme.typography.titleMedium)
                     Row(
@@ -148,30 +150,30 @@ fun OverviewScreen(
                     ) {
                         Column {
                             Text("Temperatur")
-                            if(soilMoistureSensorDataState.temperature > 40) {
+                            if(temperatureSensorGreenhouseState.temperature > 40) {
                                 Text("Bitte Gewächshaus öffnen und ggf. schattieren!",style = MaterialTheme.typography.bodySmall,color= Color.Red)
-                            } else if(soilMoistureSensorDataState.temperature < 15){
+                            } else if(temperatureSensorGreenhouseState.temperature < 15){
                                 Text("Bitte Gewächshaus schließen!",style = MaterialTheme.typography.bodySmall,color= Color.Red)
                             } else {
                                 Text("Alles im Grünen Bereich",style = MaterialTheme.typography.bodySmall,color= Color.Green)
                             }
                         }
-                        Text(soilMoistureSensorDataState.temperature.toString())
+                        Text("${temperatureSensorGreenhouseState.temperature} °C")
 
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Verbindungs-Qualität Sensor")
-                        Text(soilMoistureSensorDataState.linkquality.toString())
+                        Text("Luftfeuchtigkeit")
+                        Text("${temperatureSensorGreenhouseState.humidity} %")
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Ladestand Sensor")
-                        Text(soilMoistureSensorDataState.battery.toString())
+                        Text("Verbindungs-Qualität Sensor")
+                        Text(temperatureSensorGreenhouseState.linkquality.toString())
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -180,30 +182,7 @@ fun OverviewScreen(
                         Text("Zuletzt Aktualisiert")
                         Text("${DateFormatter.formatDateTime(dateTime)}\"")
                     }
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text("Bewässerung")
-                            if(soilMoistureSensorDataState.soil_moisture > 40) {
-                                Text("Alles im Grünen Bereich",style = MaterialTheme.typography.bodySmall,color= Color.Green)
-                            } else {
-                                Text("Am nächsten Morgen wird bewässert!",style = MaterialTheme.typography.bodySmall,color= Color.Red)
-                            }
-                        }
-                        var checked by remember { mutableStateOf(true) }
-                        Switch(
-                            checked = waterValveDataState.state == "ON",
-                            onCheckedChange = {
-                                overviewScreenViewModel.onChangeWaterValveState(it)
-                            }
-                        )
-                    }
-
                 }
-
             }
         }
 

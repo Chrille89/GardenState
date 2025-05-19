@@ -9,9 +9,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.bach.gardenstate.MqttClientManager
 import com.bach.gardenstate.features.overview.model.SoilMoistureSensorData
+import com.bach.gardenstate.features.overview.model.TemperatureSensorGreenhouse
 import com.bach.gardenstate.features.overview.model.WaterValveData
 import com.bach.gardenstate.ui.theme.LightGreen
 import com.bach.gardenstate.ui.theme.Orange
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 
 class OverviewScreenViewModel : ViewModel() {
@@ -32,17 +35,17 @@ class OverviewScreenViewModel : ViewModel() {
     )
     val messageSoilMoistureSensor: State<SoilMoistureSensorData> = _messageSoilMoistureSensor
 
-
-    private val _backgroundColor: MutableState<Color> = mutableStateOf(
-        Color.Red
+    private val _messageTemperatureSensorGreenhouse :  MutableState<TemperatureSensorGreenhouse> = mutableStateOf(
+        TemperatureSensorGreenhouse("2025-05-03T22:27:46+02:00", 29.02f, humidity = 99.05f, linkquality = 50)
     )
-    val backgroundColor: State<Color> = _backgroundColor
+    val messageTemperatureSensorGreenhouse: State<TemperatureSensorGreenhouse> = _messageTemperatureSensorGreenhouse
 
     private val waterValveMqttClientManager = MqttClientManager(
         mqttServerUri,
         "$waterValveMqttTopic/set"
     ) { message ->
         Log.d("OverviewScreenViewModel", "message: $message.value")
+
     }
 
     init {
@@ -65,15 +68,15 @@ class OverviewScreenViewModel : ViewModel() {
         { message ->
             _messageSoilMoistureSensor.value =
                 withUnknownKeys.decodeFromString<SoilMoistureSensorData>(message)
-            setBackGroundColorBySoilMoisture(_messageSoilMoistureSensor.value.soil_moisture)
         }
     }
 
     private fun subscribeTemperatureSensorGreenHouse() {
         MqttClientManager(mqttServerUri, temperatureSensorGreenHouseMqttTopic)
         { message ->
-            _messageSoilMoistureSensor.value =
-                withUnknownKeys.decodeFromString<SoilMoistureSensorData>(message)
+         Log.d("OverviewScreenViewModel",message)
+            _messageTemperatureSensorGreenhouse.value =
+                withUnknownKeys.decodeFromString<TemperatureSensorGreenhouse>(message)
         }
     }
 
@@ -84,7 +87,6 @@ class OverviewScreenViewModel : ViewModel() {
         }
         interviewMqttClientManager.publish("{\"id\": \"Watervalve_Vegetables\"}")
         interviewMqttClientManager.publish("{\"id\": \"SoilMoistureSensor_Vegetables\"}")
-        interviewMqttClientManager.publish("{\"id\": \"TemperatureSensor_Greenhouse\"}")
         interviewMqttClientManager.disconnect()
     }
 
@@ -93,15 +95,6 @@ class OverviewScreenViewModel : ViewModel() {
             waterValveMqttClientManager.publish("{\"state\":\"ON\"}")
         } else {
             waterValveMqttClientManager.publish("{\"state\":\"OFF\"}")
-        }
-    }
-
-    private fun setBackGroundColorBySoilMoisture(soilMoisture: Int) {
-        when (soilMoisture) {
-            in 0..20 -> _backgroundColor.value = Color.Red
-            in 20..40 -> _backgroundColor.value = Color.Yellow
-            in 40..60 -> _backgroundColor.value = LightGreen
-            else -> _backgroundColor.value = Color.Green
         }
     }
 }
