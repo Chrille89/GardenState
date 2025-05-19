@@ -4,13 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -60,36 +63,147 @@ fun OverviewScreen(
             Modifier
                 .fillMaxSize()
                 .padding(paddings)
-                .padding(10.dp)
-        ) {
-            Row(
-                Modifier.fillMaxWidth().padding(vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
 
-                Text("Bewässerung", fontWeight = FontWeight.Bold)
-                var checked by remember { mutableStateOf(true) }
-                Switch(
-                    checked = waterValveDataState.state == "ON",
-                    onCheckedChange = {
-                        overviewScreenViewModel.onChangeWaterValveState(it)
-                    }
-                )
-            }
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(40.dp))
-                    .background(overviewScreenViewModel.backgroundColor.value),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+        ) {
+
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(10.dp)
+
             ) {
-                val dateTime: LocalDateTime = Instant.parse(soilMoistureSensorDataState.last_seen)
-                    .toLocalDateTime(TimeZone.currentSystemDefault())
-                Text("Gemüsebeet", color = Color.Black)
-                Text("Bodenfeuchte: ${soilMoistureSensorDataState.soil_moisture} %",color = Color.Black)
-                Text("Stand: ${DateFormatter.formatDateTime(dateTime)}",color = Color.Black)
+                Column(modifier = Modifier.padding(5.dp)) {
+                    val dateTime: LocalDateTime = Instant.parse(soilMoistureSensorDataState.last_seen)
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                    Text("Gemüsebeet", style = MaterialTheme.typography.titleMedium)
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Bodenfeuchte")
+                        Text("${soilMoistureSensorDataState.soil_moisture} %")
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Bodentemperatur")
+                        Text(soilMoistureSensorDataState.temperature.toString())
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Verbindungs-Qualität Sensor")
+                        Text(soilMoistureSensorDataState.linkquality.toString())
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Ladestand Sensor")
+                        Text(soilMoistureSensorDataState.battery.toString())
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Zuletzt Aktualisiert")
+                        Text("${DateFormatter.formatDateTime(dateTime)}\"")
+                    }
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text("Bewässerung")
+                            if(soilMoistureSensorDataState.soil_moisture > 40) {
+                                Text("Alles im Grünen Bereich",style = MaterialTheme.typography.bodySmall,color= Color.Green)
+                            } else {
+                                Text("Am nächsten Morgen wird bewässert!",style = MaterialTheme.typography.bodySmall,color= Color.Red)
+                            }
+                        }
+                        var checked by remember { mutableStateOf(true) }
+                        Switch(
+                            checked = waterValveDataState.state == "ON",
+                            onCheckedChange = {
+                                overviewScreenViewModel.onChangeWaterValveState(it)
+                            }
+                        )
+                    }
+                }
+
+            }
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(10.dp)
+
+            ) {
+                Column(modifier = Modifier.padding(5.dp)) {
+                    val dateTime: LocalDateTime = Instant.parse(soilMoistureSensorDataState.last_seen)
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                    Text("Gewächshaus", style = MaterialTheme.typography.titleMedium)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text("Temperatur")
+                            if(soilMoistureSensorDataState.temperature > 40) {
+                                Text("Bitte Gewächshaus öffnen und ggf. schattieren!",style = MaterialTheme.typography.bodySmall,color= Color.Red)
+                            } else if(soilMoistureSensorDataState.temperature < 15){
+                                Text("Bitte Gewächshaus schließen!",style = MaterialTheme.typography.bodySmall,color= Color.Red)
+                            } else {
+                                Text("Alles im Grünen Bereich",style = MaterialTheme.typography.bodySmall,color= Color.Green)
+                            }
+                        }
+                        Text(soilMoistureSensorDataState.temperature.toString())
+
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Verbindungs-Qualität Sensor")
+                        Text(soilMoistureSensorDataState.linkquality.toString())
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Ladestand Sensor")
+                        Text(soilMoistureSensorDataState.battery.toString())
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Zuletzt Aktualisiert")
+                        Text("${DateFormatter.formatDateTime(dateTime)}\"")
+                    }
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text("Bewässerung")
+                            if(soilMoistureSensorDataState.soil_moisture > 40) {
+                                Text("Alles im Grünen Bereich",style = MaterialTheme.typography.bodySmall,color= Color.Green)
+                            } else {
+                                Text("Am nächsten Morgen wird bewässert!",style = MaterialTheme.typography.bodySmall,color= Color.Red)
+                            }
+                        }
+                        var checked by remember { mutableStateOf(true) }
+                        Switch(
+                            checked = waterValveDataState.state == "ON",
+                            onCheckedChange = {
+                                overviewScreenViewModel.onChangeWaterValveState(it)
+                            }
+                        )
+                    }
+
+                }
+
             }
         }
 

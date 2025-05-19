@@ -18,8 +18,9 @@ class OverviewScreenViewModel : ViewModel() {
     private val withUnknownKeys = Json { ignoreUnknownKeys = true }
     private val mqttServerUri: String = "tcp://192.168.188.21:1883"
     private val interviewTopic: String = "zigbee2mqtt/bridge/request/device/interview"
-    private val soilMoistureMqttTopic: String = "zigbee2mqtt/SoilMoistureSensor"
-    private val waterValveMqttTopic: String = "zigbee2mqtt/Watervalve"
+    private val soilMoistureMqttTopic: String = "zigbee2mqtt/SoilMoistureSensor_Vegetables"
+    private val temperatureSensorGreenHouseMqttTopic : String = "zigbee2mqtt/TemperatureSensor_Greenhouse"
+    private val waterValveMqttTopic: String = "zigbee2mqtt/Watervalve_Vegetables"
 
     private val _messageWaterValveSensor: MutableState<WaterValveData> = mutableStateOf(
         WaterValveData(50, "2025-05-03T22:27:46+02:00", 32, "OFF", 100)
@@ -30,6 +31,7 @@ class OverviewScreenViewModel : ViewModel() {
         SoilMoistureSensorData(50, "2025-05-03T22:27:46+02:00", 32, 38, 20)
     )
     val messageSoilMoistureSensor: State<SoilMoistureSensorData> = _messageSoilMoistureSensor
+
 
     private val _backgroundColor: MutableState<Color> = mutableStateOf(
         Color.Red
@@ -46,6 +48,7 @@ class OverviewScreenViewModel : ViewModel() {
     init {
         subscribeWaterValve()
         subscribeSoilMoistureSensor()
+        subscribeTemperatureSensorGreenHouse()
         interviewMqttDevices()
     }
 
@@ -66,13 +69,22 @@ class OverviewScreenViewModel : ViewModel() {
         }
     }
 
+    private fun subscribeTemperatureSensorGreenHouse() {
+        MqttClientManager(mqttServerUri, temperatureSensorGreenHouseMqttTopic)
+        { message ->
+            _messageSoilMoistureSensor.value =
+                withUnknownKeys.decodeFromString<SoilMoistureSensorData>(message)
+        }
+    }
+
     private fun interviewMqttDevices() {
         val interviewMqttClientManager = MqttClientManager(mqttServerUri, interviewTopic)
         { message ->
             Log.d("OverviewScreenViewModel", "message: $message.value")
         }
-        interviewMqttClientManager.publish("{\"id\": \"Watervalve\"}")
-        interviewMqttClientManager.publish("{\"id\": \"SoilMoistureSensor\"}")
+        interviewMqttClientManager.publish("{\"id\": \"Watervalve_Vegetables\"}")
+        interviewMqttClientManager.publish("{\"id\": \"SoilMoistureSensor_Vegetables\"}")
+        interviewMqttClientManager.publish("{\"id\": \"TemperatureSensor_Greenhouse\"}")
         interviewMqttClientManager.disconnect()
     }
 
