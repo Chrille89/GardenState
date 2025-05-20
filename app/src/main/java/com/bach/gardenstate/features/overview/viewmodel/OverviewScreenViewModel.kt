@@ -1,20 +1,14 @@
 package com.bach.gardenstate.features.overview.viewmodel
 
 import android.util.Log
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.bach.gardenstate.MqttClientManager
 import com.bach.gardenstate.features.overview.model.SoilMoistureSensorData
 import com.bach.gardenstate.features.overview.model.TemperatureSensorGreenhouse
 import com.bach.gardenstate.features.overview.model.WaterValveData
-import com.bach.gardenstate.ui.theme.LightGreen
-import com.bach.gardenstate.ui.theme.Orange
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 
 class OverviewScreenViewModel : ViewModel() {
@@ -22,7 +16,8 @@ class OverviewScreenViewModel : ViewModel() {
     private val mqttServerUri: String = "tcp://192.168.188.21:1883"
     private val interviewTopic: String = "zigbee2mqtt/bridge/request/device/interview"
     private val soilMoistureMqttTopic: String = "zigbee2mqtt/SoilMoistureSensor_Vegetables"
-    private val temperatureSensorGreenHouseMqttTopic : String = "zigbee2mqtt/TemperatureSensor_Greenhouse"
+    private val temperatureSensorGreenHouseMqttTopic: String =
+        "zigbee2mqtt/TemperatureSensor_Greenhouse"
     private val waterValveMqttTopic: String = "zigbee2mqtt/Watervalve_Vegetables"
 
     private val _messageWaterValveSensor: MutableState<WaterValveData> = mutableStateOf(
@@ -35,10 +30,17 @@ class OverviewScreenViewModel : ViewModel() {
     )
     val messageSoilMoistureSensor: State<SoilMoistureSensorData> = _messageSoilMoistureSensor
 
-    private val _messageTemperatureSensorGreenhouse :  MutableState<TemperatureSensorGreenhouse> = mutableStateOf(
-        TemperatureSensorGreenhouse("2025-05-03T22:27:46+02:00", 29.02f, humidity = 99.05f, linkquality = 50)
-    )
-    val messageTemperatureSensorGreenhouse: State<TemperatureSensorGreenhouse> = _messageTemperatureSensorGreenhouse
+    private val _messageTemperatureSensorGreenhouse: MutableState<TemperatureSensorGreenhouse> =
+        mutableStateOf(
+            TemperatureSensorGreenhouse(
+                "2025-05-03T22:27:46+02:00",
+                29.02f,
+                humidity = 99.05f,
+                linkquality = 50
+            )
+        )
+    val messageTemperatureSensorGreenhouse: State<TemperatureSensorGreenhouse> =
+        _messageTemperatureSensorGreenhouse
 
     private val waterValveMqttClientManager = MqttClientManager(
         mqttServerUri,
@@ -74,7 +76,7 @@ class OverviewScreenViewModel : ViewModel() {
     private fun subscribeTemperatureSensorGreenHouse() {
         MqttClientManager(mqttServerUri, temperatureSensorGreenHouseMqttTopic)
         { message ->
-         Log.d("OverviewScreenViewModel",message)
+            Log.d("OverviewScreenViewModel", message)
             _messageTemperatureSensorGreenhouse.value =
                 withUnknownKeys.decodeFromString<TemperatureSensorGreenhouse>(message)
         }

@@ -8,5 +8,5 @@ data class TemperatureSensorGreenhouse(
     val temperature: Float,
     val humidity: Float,
     val linkquality: Int,
-    )
+)
 
