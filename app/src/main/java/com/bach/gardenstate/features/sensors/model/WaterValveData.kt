@@ -1,4 +1,4 @@
-package com.bach.gardenstate.features.overview.model
+package com.bach.gardenstate.features.sensors.model
 
 import kotlinx.serialization.Serializable
 

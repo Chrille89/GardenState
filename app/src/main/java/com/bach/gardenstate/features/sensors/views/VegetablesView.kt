@@ -1,4 +1,4 @@
-package com.bach.gardenstate.features.overview.views
+package com.bach.gardenstate.features.sensors.views
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,9 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.bach.gardenstate.features.overview.model.SoilMoistureSensorData
-import com.bach.gardenstate.features.overview.model.WaterValveData
-import com.bach.gardenstate.features.overview.viewmodel.OverviewScreenViewModel
+import com.bach.gardenstate.features.sensors.model.SoilMoistureSensorData
+import com.bach.gardenstate.features.sensors.model.WaterValveData
+import com.bach.gardenstate.features.sensors.viewmodel.VegetablesViewModel
 import com.bach.gardenstate.ui.theme.GardenStateTheme
 import com.bach.gardenstate.utils.DateFormatter
 import kotlinx.datetime.Instant
@@ -30,11 +30,11 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun VegetablesView(
     modifier: Modifier = Modifier,
-    overviewScreenViewModel: OverviewScreenViewModel = viewModel()
+    vegetablesViewModel: VegetablesViewModel = viewModel()
 ) {
-    val waterValveDataState: WaterValveData = overviewScreenViewModel.messageWaterValveSensor.value
+    val waterValveDataState: WaterValveData = vegetablesViewModel.messageWaterValveVegetablesSensor.value
     val soilMoistureSensorDataState: SoilMoistureSensorData =
-        overviewScreenViewModel.messageSoilMoistureSensor.value
+        vegetablesViewModel.messageSoilMoistureSensor.value
 
     Card(
         modifier
@@ -120,7 +120,7 @@ fun VegetablesView(
             ) {
                 Column {
                     Text("Bewässerung")
-                    if (soilMoistureSensorDataState.soil_moisture < 40) {
+                    if (waterValveDataState.state == "OFF" && soilMoistureSensorDataState.soil_moisture < 40) {
                         Text(
                             "Am nächsten Morgen wird bewässert!",
                             style = MaterialTheme.typography.bodySmall,
@@ -131,7 +131,7 @@ fun VegetablesView(
                 Switch(
                     checked = waterValveDataState.state == "ON",
                     onCheckedChange = {
-                        overviewScreenViewModel.onChangeWaterValveState(it)
+                        vegetablesViewModel.onChangeWaterValveState(it)
                     }
                 )
             }

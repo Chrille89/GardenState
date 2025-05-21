@@ -7,8 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.bach.gardenstate.features.overview.screen.OverviewScreen
+import com.bach.gardenstate.features.sensors.screen.OverviewScreen
 import com.bach.gardenstate.ui.theme.GardenStateTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.bach.familyfresh.navigation.Routes
+import com.bach.gardenstate.features.actors.screen.ActorScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +25,22 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    OverviewScreen()
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController,
+                        startDestination = Routes.SensorMenuRoute
+                    ) {
+                        composable<Routes.SensorMenuRoute> {
+                             OverviewScreen() { tabTitle ->
+                                 when(tabTitle) {
+                                     "Aktoren" ->  navController.navigate(Routes.ActorMenuRoute)
+                                 }
+                             }
+                        }
+                        composable<Routes.ActorMenuRoute> {
+                                ActorScreen()
+                        }
+                    }
                 }
             }
         }
