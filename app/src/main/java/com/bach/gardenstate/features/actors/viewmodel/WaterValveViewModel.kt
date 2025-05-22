@@ -6,19 +6,20 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.bach.gardenstate.MqttClientManager
+import com.bach.gardenstate.features.actors.model.UIState
 import com.bach.gardenstate.features.actors.model.WaterValveData
 import kotlinx.serialization.json.Json
 
-class WaterValveViewModel(private val waterValveFriendlyName : String) : ViewModel() {
+class WaterValveViewModel(private val waterValveFriendlyName: String) : ViewModel() {
     private val withUnknownKeys = Json { ignoreUnknownKeys = true }
     private val mqttServerUri: String = "tcp://192.168.188.21:1883"
     private val baseTopic: String = "zigbee2mqtt"
     private val interviewTopic: String = "$baseTopic/bridge/request/device/interview"
 
-    private val _messageWaterValve: MutableState<WaterValveData> = mutableStateOf(
-        WaterValveData(50, "2025-05-03T22:27:46+02:00", "00:00:30",32, "OFF", 100,"2025-05-03T22:27:46+02:00")
+    private val _messageWaterValve: MutableState<UIState> = mutableStateOf(
+        UIState.isLoading
     )
-    val messageWaterValve: State<WaterValveData> = _messageWaterValve
+    val messageWaterValve: State<UIState> = _messageWaterValve
 
     private val waterValveMqttClientManager = MqttClientManager(
         mqttServerUri,
@@ -45,7 +46,7 @@ class WaterValveViewModel(private val waterValveFriendlyName : String) : ViewMod
         MqttClientManager(mqttServerUri, "$baseTopic/$waterValveFriendlyName")
         { message ->
             _messageWaterValve.value =
-                withUnknownKeys.decodeFromString<WaterValveData>(message)
+                UIState.success(withUnknownKeys.decodeFromString<WaterValveData>(message))
         }
     }
 

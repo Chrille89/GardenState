@@ -8,7 +8,11 @@ import com.bach.gardenstate.model.TabBarItem
 
 
 @Composable
-fun TabView(tabBarItems: List<TabBarItem>, selectedTabIndex: Int, onClickTab: (title: String) -> Unit) {
+fun TabView(
+    tabBarItems: List<TabBarItem>,
+    selectedTabIndex: Int,
+    onClickTab: (title: String) -> Unit
+) {
     NavigationBar {
         // looping over each tab to generate the views and navigation for each item
         tabBarItems.forEachIndexed { index, tabBarItem ->
@@ -26,7 +30,7 @@ fun TabView(tabBarItems: List<TabBarItem>, selectedTabIndex: Int, onClickTab: (t
                         badgeAmount = tabBarItem.badgeAmount
                     )
                 },
-                label = {Text(tabBarItem.title)})
+                label = { Text(tabBarItem.title) })
         }
     }
 }

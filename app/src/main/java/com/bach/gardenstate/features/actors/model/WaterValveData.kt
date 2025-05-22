@@ -12,4 +12,4 @@ data class WaterValveData(
     val linkquality: Int,
     val last_seen: String,
 
-)
+    )

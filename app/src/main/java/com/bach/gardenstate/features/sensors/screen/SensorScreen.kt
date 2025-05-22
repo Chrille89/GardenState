@@ -13,8 +13,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.bach.gardenstate.R
-import com.bach.gardenstate.features.sensors.views.GreenhouseView
-import com.bach.gardenstate.features.sensors.views.VegetablesView
+import com.bach.gardenstate.features.sensors.views.SoilMoistureSensorGreenhouseView
+import com.bach.gardenstate.features.sensors.views.TemperatureSensorGreenhouseView
 import com.bach.gardenstate.model.TabBarItem
 import com.bach.gardenstate.ui.theme.GardenStateTheme
 import com.bach.gardenstate.ui.views.navigation.TabView
@@ -38,12 +38,12 @@ fun SensorScreen(
                 selectedIcon = ImageVector.vectorResource(R.drawable.baseline_sensors_24),
                 unselectedIcon = ImageVector.vectorResource(R.drawable.baseline_sensors_24)
             )
-            val changeMenuTab =  TabBarItem(
+            val changeMenuTab = TabBarItem(
                 title = "Aktoren",
                 selectedIcon = ImageVector.vectorResource(R.drawable.valve_24px),
                 unselectedIcon = ImageVector.vectorResource(R.drawable.valve_24px)
             )
-            TabView(listOf(menuTab, changeMenuTab),0) { tabTitle ->
+            TabView(listOf(menuTab, changeMenuTab), 0) { tabTitle ->
                 onClickTab(tabTitle)
             }
         }
@@ -53,8 +53,10 @@ fun SensorScreen(
                 .fillMaxSize()
                 .padding(paddings)
         ) {
-            VegetablesView()
-            GreenhouseView()
+            SoilMoistureSensorGreenhouseView()
+            TemperatureSensorGreenhouseView()
+            //   VegetablesView()
+
         }
     }
 }
@@ -63,6 +65,6 @@ fun SensorScreen(
 @Preview
 fun SensorScreenPreview() {
     GardenStateTheme {
-        SensorScreen() {}
+        SensorScreen {}
     }
 }

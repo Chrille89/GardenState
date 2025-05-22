@@ -1,4 +1,4 @@
-package com.bach.gardenstate.features.actors.views
+package com.bach.gardenstate.features.sensors.views
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,20 +10,16 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.bach.gardenstate.features.actors.model.UIState
-import com.bach.gardenstate.features.actors.model.WaterValveType
-import com.bach.gardenstate.features.actors.model.friendlyName
-import com.bach.gardenstate.features.actors.model.title
-import com.bach.gardenstate.features.actors.viewmodel.WaterValveViewModel
-import com.bach.gardenstate.features.actors.viewmodel.WaterValveViewModelFactory
+import com.bach.gardenstate.features.sensors.model.SoilMoistureSensorUIState
+import com.bach.gardenstate.features.sensors.viewmodel.SoilMoistureVegetablesViewModel
 import com.bach.gardenstate.ui.theme.GardenStateTheme
 import com.bach.gardenstate.utils.DateFormatter
 import kotlinx.datetime.Instant
@@ -32,80 +28,69 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @Composable
-fun WaterValveView(
+fun SoilMoistureSensorVegetablesView(
     modifier: Modifier = Modifier,
-    waterValveType: WaterValveType,
-    waterValveViewModel: WaterValveViewModel = viewModel(
-        key = waterValveType.friendlyName,
-        factory = WaterValveViewModelFactory(waterValveType.friendlyName)
-    ),
+    soilMoistureVegetablesViewModel: SoilMoistureVegetablesViewModel = viewModel()
 ) {
+    val soilMoistureSensorDataState: SoilMoistureSensorUIState =
+        soilMoistureVegetablesViewModel.messageSoilMoistureSensor.value
 
     Card(
         modifier
             .fillMaxWidth()
             .padding(10.dp)
     ) {
-        Text(
-            waterValveType.title,
-            Modifier.padding(5.dp),
-            style = MaterialTheme.typography.titleLarge
-        )
-        when (val waterValveMessageState: UIState = waterValveViewModel.messageWaterValve.value) {
-            UIState.isLoading ->
+        Text("Gemüsebeet", Modifier.padding(5.dp), style = MaterialTheme.typography.titleLarge)
+
+        when (soilMoistureSensorDataState) {
+            SoilMoistureSensorUIState.isLoading ->
                 Column(
                     Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) { CircularProgressIndicator() }
 
-            is UIState.success ->
+            is SoilMoistureSensorUIState.success ->
                 Column(
                     modifier = Modifier.padding(5.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text("Bewässerung")
-                        val isChecked = waterValveMessageState.waterValveData.state == "ON"
-                        Switch(
-                            checked = isChecked,
-                            onCheckedChange = {
-                                waterValveViewModel.onChangeWaterValveState(!isChecked)
+                    Column {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Bodenfeuchte")
+                            Text("${soilMoistureSensorDataState.soilMoistureSensorData.temperature} %")
+                        }
+                        if(soilMoistureSensorDataState.soilMoistureSensorData.temperature < 40) {
+                            Row {
+                                Text("Morgen wird bewässert!", color = Color.Yellow, style = MaterialTheme.typography.bodySmall)
                             }
-                        )
+                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Letzte Bewässerung")
-                        Text(waterValveMessageState.waterValveData.irrigation_start_time)
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Letzte Bewässerungsdauer")
-                        Text(waterValveMessageState.waterValveData.last_irrigation_duration)
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Letzte Bewässerungsmenge")
-                        Text("${waterValveMessageState.waterValveData.water_consumed} Liter")
+                        Column {
+                            Text("Bodentemperatur")
+                            if (soilMoistureSensorDataState.soilMoistureSensorData.temperature < 5) {
+                                Text(
+                                    "Achtung Bodenfrost!",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.Red
+                                )
+                            }
+                        }
+                        Text("${soilMoistureSensorDataState.soilMoistureSensorData.temperature} °C")
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text("Verbindungs-Qualität")
-                        Text("${waterValveMessageState.waterValveData.linkquality}")
+                        Text("${soilMoistureSensorDataState.soilMoistureSensorData.linkquality}")
                     }
                     Column {
                         Row(
@@ -113,12 +98,12 @@ fun WaterValveView(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text("Akku Sensor")
-                            Text("${waterValveMessageState.waterValveData.battery} %")
+                            Text("${soilMoistureSensorDataState.soilMoistureSensorData.battery} %")
                         }
                         Row {
                             LinearProgressIndicator(
                                 modifier = Modifier.fillMaxWidth(),
-                                progress = { waterValveMessageState.waterValveData.battery.toFloat() / 100 })
+                                progress = { soilMoistureSensorDataState.soilMoistureSensorData.battery.toFloat() / 100 })
                         }
                     }
                     Row(
@@ -126,22 +111,23 @@ fun WaterValveView(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         val dateTime: LocalDateTime =
-                            Instant.parse(waterValveMessageState.waterValveData.last_seen)
+                            Instant.parse(soilMoistureSensorDataState.soilMoistureSensorData.last_seen)
                                 .toLocalDateTime(TimeZone.currentSystemDefault())
                         Text("Zuletzt Aktualisiert")
                         Text(DateFormatter.formatDateTime(dateTime))
                     }
+
                 }
         }
-    }
 
+    }
 }
 
-
-@Preview
 @Composable
-fun WaterValveViewPreview() {
+@Preview
+fun SoilMoistureSensorVegetablesPreview() {
     GardenStateTheme {
-        WaterValveView(Modifier, WaterValveType.VEGETABLES)
+        SoilMoistureSensorVegetablesView()
     }
 }
+

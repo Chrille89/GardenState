@@ -14,9 +14,13 @@ fun TabBarIconView(
     title: String,
     badgeAmount: Int? = null
 ) {
-        Icon(
-            imageVector = if (isSelected) {selectedIcon} else {unselectedIcon},
-            contentDescription = title
-        )
+    Icon(
+        imageVector = if (isSelected) {
+            selectedIcon
+        } else {
+            unselectedIcon
+        },
+        contentDescription = title
+    )
 
 }
