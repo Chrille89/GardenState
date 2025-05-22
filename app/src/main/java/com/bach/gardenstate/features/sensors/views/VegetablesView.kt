@@ -43,9 +43,6 @@ fun VegetablesView(
             modifier = Modifier.padding(5.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            val dateTime: LocalDateTime = Instant.parse(soilMoistureSensorDataState.last_seen)
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-
             Column {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -83,30 +80,15 @@ fun VegetablesView(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Verbindungs-Qualität Sensor")
+                Text("Verbindungs-Qualität")
                 Text("${soilMoistureSensorDataState.linkquality}")
-            }
-            Column {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("Ladestand Sensor")
-                    Text("${soilMoistureSensorDataState.battery} %")
-
-                }
-                LinearProgressIndicator(
-                    progress = { soilMoistureSensorDataState.battery.toFloat() / 100 },
-                    modifier = Modifier.fillMaxWidth(),
-                    color = if (soilMoistureSensorDataState.battery < 30) Color.Red
-                    else if (soilMoistureSensorDataState.battery < 50) Color.Yellow
-                    else Color.Green
-                )
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                val dateTime: LocalDateTime = Instant.parse(soilMoistureSensorDataState.last_seen)
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
                 Text("Zuletzt Aktualisiert")
                 Text("${DateFormatter.formatDateTime(dateTime)}\"")
             }

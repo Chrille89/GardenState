@@ -6,37 +6,43 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.bach.gardenstate.MqttClientManager
+import com.bach.gardenstate.features.sensors.model.SoilMoistureSensorData
 import com.bach.gardenstate.features.sensors.model.TemperatureSensorGreenhouse
 import kotlinx.serialization.json.Json
 
 class GreenHouseViewModel : ViewModel() {
     private val withUnknownKeys = Json { ignoreUnknownKeys = true }
     private val mqttServerUri: String = "tcp://192.168.188.21:1883"
-    private val temperatureSensorGreenHouseMqttTopic: String =
-        "zigbee2mqtt/TemperatureSensor_Greenhouse"
+    private val interviewTopic: String = "zigbee2mqtt/bridge/request/device/interview"
+    private val soilMoistureSensorGreenHouseMqttTopic: String =
+        "zigbee2mqtt/SoilMoistureSensor_Greenhouse"
 
-    private val _messageTemperatureSensorGreenhouse: MutableState<TemperatureSensorGreenhouse> =
-        mutableStateOf(
-            TemperatureSensorGreenhouse(
-                "2025-05-03T22:27:46+02:00",
-                29.02f,
-                humidity = 99.05f,
-                linkquality = 50
-            )
-        )
-    val messageTemperatureSensorGreenhouse: State<TemperatureSensorGreenhouse> =
-        _messageTemperatureSensorGreenhouse
+    private val _messageSoilMoistureSensor: MutableState<SoilMoistureSensorData> = mutableStateOf(
+        SoilMoistureSensorData(50, "2025-05-03T22:27:46+02:00", 32, 38, 20)
+    )
+    val messageSoilMoistureSensor: State<SoilMoistureSensorData> = _messageSoilMoistureSensor
 
     init {
-        subscribeTemperatureSensorGreenHouse()
+        subscribeSoilMoistureSensorGreenHouse()
+        interviewMqttDevices()
+
     }
 
-    private fun subscribeTemperatureSensorGreenHouse() {
-        MqttClientManager(mqttServerUri, temperatureSensorGreenHouseMqttTopic)
+    private fun interviewMqttDevices() {
+        val interviewMqttClientManager = MqttClientManager(mqttServerUri, interviewTopic)
+        { message ->
+            Log.d("OverviewScreenViewModel", "message: $message.value")
+        }
+        interviewMqttClientManager.publish("{\"id\": \"SoilMoistureSensor_Greenhouse\"}")
+        interviewMqttClientManager.disconnect()
+    }
+
+    private fun subscribeSoilMoistureSensorGreenHouse() {
+        MqttClientManager(mqttServerUri, soilMoistureSensorGreenHouseMqttTopic)
         { message ->
             Log.d("OverviewScreenViewModel", message)
-            _messageTemperatureSensorGreenhouse.value =
-                withUnknownKeys.decodeFromString<TemperatureSensorGreenhouse>(message)
+            _messageSoilMoistureSensor.value =
+                withUnknownKeys.decodeFromString<SoilMoistureSensorData>(message)
         }
     }
 }

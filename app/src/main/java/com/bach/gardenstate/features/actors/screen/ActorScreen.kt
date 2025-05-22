@@ -1,11 +1,14 @@
 package com.bach.gardenstate.features.actors.screen
 
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -63,9 +66,11 @@ fun ActorScreen(
             Modifier
                 .fillMaxSize()
                 .padding(paddings)
+                .verticalScroll(rememberScrollState())
         ) {
             WaterValveView(waterValveType = WaterValveType.VEGETABLES)
             WaterValveView(waterValveType= WaterValveType.GREENHOUSE)
+
         }
     }
 }

@@ -5,7 +5,7 @@ enum class WaterValveType {
     GREENHOUSE
 }
 
-val WaterValveType.topic : String
+val WaterValveType.friendlyName : String
     get() = when(this) {
         WaterValveType.VEGETABLES -> "Watervalve_Vegetables"
         WaterValveType.GREENHOUSE -> "Watervalve_Greenhouse"

@@ -17,19 +17,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bach.gardenstate.features.actors.model.WaterValveType
+import com.bach.gardenstate.features.actors.model.friendlyName
 import com.bach.gardenstate.features.actors.model.title
-import com.bach.gardenstate.features.actors.model.topic
 import com.bach.gardenstate.features.actors.viewmodel.WaterValveViewModel
 import com.bach.gardenstate.features.actors.viewmodel.WaterValveViewModelFactory
 import com.bach.gardenstate.ui.theme.GardenStateTheme
+import com.bach.gardenstate.utils.DateFormatter
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun WaterValveView(
     modifier: Modifier = Modifier,
     waterValveType: WaterValveType,
     waterValveViewModel: WaterValveViewModel = viewModel(
-        key = waterValveType.topic,
-        factory = WaterValveViewModelFactory(waterValveType.topic)),
+        key = waterValveType.friendlyName,
+        factory = WaterValveViewModelFactory(waterValveType.friendlyName)),
 ) {
 
     val waterValveData = waterValveViewModel.messageWaterValve.value
@@ -76,19 +81,18 @@ fun WaterValveView(
                 Text("Letzte Bewässerungsdauer")
                 Text(waterValveData.last_irrigation_duration)
             }
-            /*
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("Letzte Bewässerungsmenge")
-                Text("${waterValveData.water_consumed}")
-            }*/
+                Text("${waterValveData.water_consumed} Liter")
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Verbindungs-Qualität Sensor")
+                Text("Verbindungs-Qualität")
                 Text("${waterValveData.linkquality}")
             }
             Column {
@@ -97,11 +101,11 @@ fun WaterValveView(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text("Ladestand Sensor")
-                    Text("${waterValveData.battery}")
+                    Text("${waterValveData.battery} %")
 
                 }
                 LinearProgressIndicator(
-                    progress = { 0.5f },
+                    progress = { waterValveData.battery.toFloat() / 100 },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -109,8 +113,10 @@ fun WaterValveView(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                val dateTime: LocalDateTime = Instant.parse(waterValveData.last_seen)
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
                 Text("Zuletzt Aktualisiert")
-                Text(waterValveData.last_seen)
+                Text(DateFormatter.formatDateTime(dateTime))
             }
         }
     }
