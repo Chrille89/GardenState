@@ -8,17 +8,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bach.gardenstate.features.sensors.model.SoilMoistureSensorData
-import com.bach.gardenstate.features.sensors.model.WaterValveData
+import com.bach.gardenstate.features.actors.model.WaterValveData
 import com.bach.gardenstate.features.sensors.viewmodel.VegetablesViewModel
 import com.bach.gardenstate.ui.theme.GardenStateTheme
 import com.bach.gardenstate.utils.DateFormatter
@@ -32,7 +30,6 @@ fun VegetablesView(
     modifier: Modifier = Modifier,
     vegetablesViewModel: VegetablesViewModel = viewModel()
 ) {
-    val waterValveDataState: WaterValveData = vegetablesViewModel.messageWaterValveVegetablesSensor.value
     val soilMoistureSensorDataState: SoilMoistureSensorData =
         vegetablesViewModel.messageSoilMoistureSensor.value
 
@@ -113,28 +110,7 @@ fun VegetablesView(
                 Text("Zuletzt Aktualisiert")
                 Text("${DateFormatter.formatDateTime(dateTime)}\"")
             }
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text("Bewässerung")
-                    if (waterValveDataState.state == "OFF" && soilMoistureSensorDataState.soil_moisture < 40) {
-                        Text(
-                            "Am nächsten Morgen wird bewässert!",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.Red
-                        )
-                    }
-                }
-                Switch(
-                    checked = waterValveDataState.state == "ON",
-                    onCheckedChange = {
-                        vegetablesViewModel.onChangeWaterValveState(it)
-                    }
-                )
-            }
+
         }
     }
 }

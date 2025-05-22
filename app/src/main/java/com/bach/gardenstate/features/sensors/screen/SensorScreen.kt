@@ -21,7 +21,7 @@ import com.bach.gardenstate.ui.views.navigation.TabView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OverviewScreen(
+fun SensorScreen(
     modifier: Modifier = Modifier,
     onClickTab: (title: String) -> Unit
 ) {
@@ -29,7 +29,7 @@ fun OverviewScreen(
         modifier,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("GardenState") }
+                title = { Text("Sensoren") }
             )
         },
         bottomBar = {
@@ -40,8 +40,8 @@ fun OverviewScreen(
             )
             val changeMenuTab =  TabBarItem(
                 title = "Aktoren",
-                selectedIcon = ImageVector.vectorResource(R.drawable.baseline_sensors_24),
-                unselectedIcon = ImageVector.vectorResource(R.drawable.baseline_sensors_24)
+                selectedIcon = ImageVector.vectorResource(R.drawable.valve_24px),
+                unselectedIcon = ImageVector.vectorResource(R.drawable.valve_24px)
             )
             TabView(listOf(menuTab, changeMenuTab),0) { tabTitle ->
                 onClickTab(tabTitle)
@@ -61,8 +61,8 @@ fun OverviewScreen(
 
 @Composable
 @Preview
-fun OverviewScreenPreview() {
+fun SensorScreenPreview() {
     GardenStateTheme {
-        OverviewScreen() {}
+        SensorScreen() {}
     }
 }
