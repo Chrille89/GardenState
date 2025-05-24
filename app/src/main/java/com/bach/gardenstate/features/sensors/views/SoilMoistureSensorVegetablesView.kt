@@ -40,7 +40,7 @@ fun SoilMoistureSensorVegetablesView(
             .fillMaxWidth()
             .padding(10.dp)
     ) {
-        Text("Gemüsebeet", Modifier.padding(5.dp), style = MaterialTheme.typography.titleLarge)
+        Text("Bodenfeuchte Gemüsebeet", Modifier.padding(5.dp), style = MaterialTheme.typography.titleLarge)
 
         when (soilMoistureSensorDataState) {
             SoilMoistureSensorUIState.isLoading ->
@@ -61,9 +61,9 @@ fun SoilMoistureSensorVegetablesView(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text("Bodenfeuchte")
-                            Text("${soilMoistureSensorDataState.soilMoistureSensorData.temperature} %")
+                            Text("${soilMoistureSensorDataState.soilMoistureSensorData.soil_moisture} %")
                         }
-                        if(soilMoistureSensorDataState.soilMoistureSensorData.temperature < 40) {
+                        if(soilMoistureSensorDataState.soilMoistureSensorData.soil_moisture < 40) {
                             Row {
                                 Text("Morgen wird bewässert!", color = Color.Yellow, style = MaterialTheme.typography.bodySmall)
                             }
