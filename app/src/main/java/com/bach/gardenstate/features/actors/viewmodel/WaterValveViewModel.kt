@@ -51,6 +51,7 @@ class WaterValveViewModel(private val waterValveFriendlyName: String) : ViewMode
     }
 
     fun onChangeWaterValveState(checked: Boolean) {
+        _messageWaterValve.value = UIState.isLoading
         if (checked) {
             waterValveMqttClientManager.publish("{\"state\":\"ON\"}")
         } else {
