@@ -52,13 +52,6 @@ fun WaterValveView(
             style = MaterialTheme.typography.titleLarge
         )
         when (val waterValveMessageState: UIState = waterValveViewModel.messageWaterValve.value) {
-            UIState.isLoading ->
-                Column(
-                    Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) { CircularProgressIndicator() }
-
             is UIState.success ->
                 Column(
                     modifier = Modifier.padding(5.dp),
@@ -132,6 +125,13 @@ fun WaterValveView(
                         Text(DateFormatter.formatDateTime(dateTime))
                     }
                 }
+            else -> {
+                Column(
+                    Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) { CircularProgressIndicator() }
+            }
         }
     }
 

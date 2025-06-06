@@ -45,13 +45,20 @@ class WaterValveViewModel(private val waterValveFriendlyName: String) : ViewMode
     private fun subscribeWaterValve() {
         MqttClientManager(mqttServerUri, "$baseTopic/$waterValveFriendlyName")
         { message ->
-            _messageWaterValve.value =
-                UIState.success(withUnknownKeys.decodeFromString<WaterValveData>(message))
+            if(_messageWaterValve.value is UIState.isWaterValveChange) {
+                val oldValue = _messageWaterValve.value as UIState.success
+                val newValue = UIState.success(withUnknownKeys.decodeFromString<WaterValveData>(message))
+                if(oldValue.waterValveData.state != newValue.waterValveData.state) {
+                    _messageWaterValve.value = UIState.success(withUnknownKeys.decodeFromString<WaterValveData>(message))
+                }
+            } else {
+                _messageWaterValve.value = UIState.success(withUnknownKeys.decodeFromString<WaterValveData>(message))
+            }
         }
     }
 
     fun onChangeWaterValveState(checked: Boolean) {
-        _messageWaterValve.value = UIState.isLoading
+        _messageWaterValve.value = UIState.isWaterValveChange
         if (checked) {
             waterValveMqttClientManager.publish("{\"state\":\"ON\"}")
         } else {
