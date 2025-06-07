@@ -16,6 +16,11 @@ class WaterValveViewModel(private val waterValveFriendlyName: String) : ViewMode
     private val baseTopic: String = "zigbee2mqtt"
     private val interviewTopic: String = "$baseTopic/bridge/request/device/interview"
 
+    private val _stateWaterValve: MutableState<Boolean> = mutableStateOf(
+        false
+    )
+    val stateWaterValve: State<Boolean> = _stateWaterValve
+
     private val _messageWaterValve: MutableState<UIState> = mutableStateOf(
         UIState.isLoading
     )
@@ -45,20 +50,18 @@ class WaterValveViewModel(private val waterValveFriendlyName: String) : ViewMode
     private fun subscribeWaterValve() {
         MqttClientManager(mqttServerUri, "$baseTopic/$waterValveFriendlyName")
         { message ->
-            if(_messageWaterValve.value is UIState.isWaterValveChange) {
-                val oldValue = _messageWaterValve.value as UIState.success
-                val newValue = UIState.success(withUnknownKeys.decodeFromString<WaterValveData>(message))
-                if(oldValue.waterValveData.state != newValue.waterValveData.state) {
-                    _messageWaterValve.value = UIState.success(withUnknownKeys.decodeFromString<WaterValveData>(message))
-                }
-            } else {
-                _messageWaterValve.value = UIState.success(withUnknownKeys.decodeFromString<WaterValveData>(message))
+            _messageWaterValve.value =
+                UIState.success(withUnknownKeys.decodeFromString<WaterValveData>(message))
+            val actualValue = _stateWaterValve.value
+            val newValue =
+                (_messageWaterValve.value as UIState.success).waterValveData.state == "ON"
+            if (actualValue != newValue) {
+                _stateWaterValve.value = newValue
             }
         }
     }
 
     fun onChangeWaterValveState(checked: Boolean) {
-        _messageWaterValve.value = UIState.isWaterValveChange
         if (checked) {
             waterValveMqttClientManager.publish("{\"state\":\"ON\"}")
         } else {

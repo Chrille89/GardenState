@@ -66,13 +66,21 @@ fun TemperatureSensorGreenhouseView(
                             Text("Temperatur")
                             Text("${temperatureSensorUIState.temperatureSensorData.temperature} %")
                         }
-                        if(temperatureSensorUIState.temperatureSensorData.temperature < 15) {
+                        if (temperatureSensorUIState.temperatureSensorData.temperature < 15) {
                             Row {
-                                Text("Bitte Gewächshaus schließen!", color = Color.Yellow, style = MaterialTheme.typography.bodySmall)
+                                Text(
+                                    "Bitte Gewächshaus schließen!",
+                                    color = Color.Yellow,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
                             }
-                        } else if(temperatureSensorUIState.temperatureSensorData.temperature > 25) {
+                        } else if (temperatureSensorUIState.temperatureSensorData.temperature > 25) {
                             Row {
-                                Text("Bitte Gewächshaus öffnen bzw. schattieren!", color = Color.Yellow, style = MaterialTheme.typography.bodySmall)
+                                Text(
+                                    "Bitte Gewächshaus öffnen bzw. schattieren!",
+                                    color = Color.Yellow,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
                             }
                         }
                     }

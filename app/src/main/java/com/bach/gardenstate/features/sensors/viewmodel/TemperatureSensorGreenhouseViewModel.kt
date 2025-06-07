@@ -5,13 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bach.gardenstate.MqttClientManager
 import com.bach.gardenstate.features.sensors.data.ApiClient
-import com.bach.gardenstate.features.sensors.model.TemperatureSensorData
 import com.bach.gardenstate.features.sensors.model.TemperatureSensorUIState
 import io.ktor.client.call.body
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 class TemperatureSensorGreenhouseViewModel : ViewModel() {
     private val _messageTemperatureSensor: MutableState<TemperatureSensorUIState> = mutableStateOf(

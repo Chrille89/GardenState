@@ -70,9 +70,13 @@ fun SoilMoistureSensorGreenhouseView(
                             Text("Bodenfeuchte")
                             Text("${soilMoistureSensorDataState.soilMoistureSensorData.soil_moisture} %")
                         }
-                        if(soilMoistureSensorDataState.soilMoistureSensorData.soil_moisture < 40) {
+                        if (soilMoistureSensorDataState.soilMoistureSensorData.soil_moisture < 40) {
                             Row {
-                                Text("Morgen wird bewässert!", color = Color.Yellow, style = MaterialTheme.typography.bodySmall)
+                                Text(
+                                    "Morgen wird bewässert!",
+                                    color = Color.Yellow,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
                             }
                         }
                     }

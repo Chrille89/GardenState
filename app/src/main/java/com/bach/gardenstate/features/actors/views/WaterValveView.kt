@@ -52,19 +52,25 @@ fun WaterValveView(
             style = MaterialTheme.typography.titleLarge
         )
         when (val waterValveMessageState: UIState = waterValveViewModel.messageWaterValve.value) {
+            UIState.isLoading ->
+                Column(
+                    Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) { CircularProgressIndicator() }
+
             is UIState.success ->
                 Column(
                     modifier = Modifier.padding(5.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-
                     Row(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("Bewässerung")
-                        val isChecked = waterValveMessageState.waterValveData.state == "ON"
+                        val isChecked = waterValveViewModel.stateWaterValve.value
                         Switch(
                             checked = isChecked,
                             onCheckedChange = {
@@ -125,16 +131,8 @@ fun WaterValveView(
                         Text(DateFormatter.formatDateTime(dateTime))
                     }
                 }
-            else -> {
-                Column(
-                    Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) { CircularProgressIndicator() }
-            }
         }
     }
-
 }
 
 
