@@ -64,7 +64,7 @@ fun TemperatureSensorGreenhouseView(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text("Temperatur")
-                            Text("${temperatureSensorUIState.temperatureSensorData.temperature} %")
+                            Text("${temperatureSensorUIState.temperatureSensorData.temperature} °C")
                         }
                         if (temperatureSensorUIState.temperatureSensorData.temperature < 15) {
                             Row {
