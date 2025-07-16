@@ -6,11 +6,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.bach.gardenstate.utils.DateFormatter
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun WaterSensorPoolView(modifier: Modifier = Modifier) {
@@ -57,14 +63,46 @@ fun WaterSensorPoolView(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Oxidations-Reduktions-Potenzial (Redox-Wert)")
+                Text("Oxidations-Reduktions-Potenzial")
                 Text("642 mV")
             }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Salzgehalt")
+                Text("1000 ppm ")
+            }
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Akku Sensor")
+                    Text("50 %")
+                }
+                Row {
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth(),
+                        progress = { 0.5f / 100 })
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                val dateTime: LocalDateTime =
+                    Instant.parse("2025-07-16T21:27:30+02:00")
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                Text("Zuletzt Aktualisiert")
+                Text(DateFormatter.formatDateTime(dateTime))
+            }
+
 
 
 
         }
     }
 
-}
+
 }

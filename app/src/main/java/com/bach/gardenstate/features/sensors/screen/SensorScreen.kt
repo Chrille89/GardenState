@@ -18,6 +18,7 @@ import com.bach.gardenstate.R
 import com.bach.gardenstate.features.sensors.views.SoilMoistureSensorGreenhouseView
 import com.bach.gardenstate.features.sensors.views.SoilMoistureSensorVegetablesView
 import com.bach.gardenstate.features.sensors.views.TemperatureSensorGreenhouseView
+import com.bach.gardenstate.features.sensors.views.WaterSensorPoolView
 import com.bach.gardenstate.model.TabBarItem
 import com.bach.gardenstate.ui.theme.GardenStateTheme
 import com.bach.gardenstate.ui.views.navigation.TabView
@@ -60,6 +61,7 @@ fun SensorScreen(
             SoilMoistureSensorVegetablesView()
             SoilMoistureSensorGreenhouseView()
             TemperatureSensorGreenhouseView()
+            WaterSensorPoolView()
         }
     }
 }
