@@ -9,7 +9,7 @@ import io.ktor.serialization.kotlinx.json.json
 
 
 object ApiClient {
-    private const val BASE_URL = "http://192.168.188.21:3000/temperature-greenhouse"
+    private const val BASE_URL = "http://192.168.188.21:3000"
 
     private val httpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -18,6 +18,10 @@ object ApiClient {
     }
 
     suspend fun getActualTemperature(): HttpResponse {
-        return httpClient.get(BASE_URL)
+        return httpClient.get("$BASE_URL/temperature-greenhouse")
+    }
+
+    suspend fun getActualPoolWaterQuality(): HttpResponse {
+        return httpClient.get("$BASE_URL/pool")
     }
 }
