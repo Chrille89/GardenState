@@ -14,12 +14,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bach.gardenstate.features.sensors.model.SoilMoistureSensorUIState
 import com.bach.gardenstate.features.sensors.model.TemperatureSensorUIState
 import com.bach.gardenstate.features.sensors.model.WaterSensorPoolUIState
 import com.bach.gardenstate.features.sensors.viewmodel.WaterSensorPoolViewModel
+import com.bach.gardenstate.ui.theme.GardenStateTheme
 import com.bach.gardenstate.utils.DateFormatter
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -67,14 +69,30 @@ fun WaterSensorPoolView(
                         Text("Temperatur")
                         Text("${waterSensorPoolUIState.waterSensorPoolData.temperature} °C")
                     }
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("pH-Wert")
-                        Text("${waterSensorPoolUIState.waterSensorPoolData.ph}")
+                        Text("PH-Wert")
+
+                        when(waterSensorPoolUIState.waterSensorPoolData.ph) {
+                            in 0f..1f -> PhValueView(pointerOffset = 100f)
+                            in 1f..2f -> PhValueView(pointerOffset = 150f)
+                            in 2f..3f -> PhValueView(pointerOffset = 200f)
+                            in 3f..4f -> PhValueView(pointerOffset = 250f)
+                            in 5f..6f -> PhValueView(pointerOffset = 300f)
+                            in 7f..8f -> PhValueView(pointerOffset = 350f)
+                            in 8f..9f -> PhValueView(pointerOffset = 400f)
+                            in 9f..10f -> PhValueView(pointerOffset = 450f)
+                            in 10f..11f -> PhValueView(pointerOffset = 500f)
+
+
+                        }
+
+
+
                     }
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -123,5 +141,13 @@ fun WaterSensorPoolView(
                     }
                 }
         }
+    }
+}
+
+@Preview
+@Composable
+fun WaterSensorPoolPreview() {
+    GardenStateTheme {
+        WaterSensorPoolView()
     }
 }
