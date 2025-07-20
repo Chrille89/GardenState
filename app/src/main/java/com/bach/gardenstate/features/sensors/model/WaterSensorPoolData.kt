@@ -21,4 +21,5 @@ data class WaterSensorPoolData(
     val ph_min: Int,
     val salinity: Int,
     val tds: Int,
-    val temperature: Float)
+    val temperature: Float
+)

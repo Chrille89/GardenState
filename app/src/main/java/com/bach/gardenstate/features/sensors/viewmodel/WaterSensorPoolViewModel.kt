@@ -6,8 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bach.gardenstate.features.sensors.data.ApiClient
-import com.bach.gardenstate.features.sensors.model.SoilMoistureSensorData
-import com.bach.gardenstate.features.sensors.model.TemperatureSensorUIState
 import com.bach.gardenstate.features.sensors.model.WaterSensorPoolData
 import com.bach.gardenstate.features.sensors.model.WaterSensorPoolUIState
 import io.ktor.client.call.body
