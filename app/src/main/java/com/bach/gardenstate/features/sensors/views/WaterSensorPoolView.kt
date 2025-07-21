@@ -1,5 +1,6 @@
 package com.bach.gardenstate.features.sensors.views
 
+import android.graphics.fonts.FontStyle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,9 +15,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.bach.gardenstate.R
 import com.bach.gardenstate.features.sensors.model.WaterSensorPoolUIState
 import com.bach.gardenstate.features.sensors.viewmodel.WaterSensorPoolViewModel
 import com.bach.gardenstate.ui.theme.GardenStateTheme
@@ -87,7 +91,15 @@ fun WaterSensorPoolView(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text("Freies (aktives) Chlor")
-                        Text("${waterSensorPoolUIState.waterSensorPoolData.free_chlorine} ppm")
+                        Column(horizontalAlignment = Alignment.End) {
+                            val freeChlorine = waterSensorPoolUIState.waterSensorPoolData.free_chlorine
+                            Text("$freeChlorine ppm")
+                            when {
+                                freeChlorine < 0.3f -> Text("Desinfektion unzureichend", color = Color.Red)
+                                freeChlorine in 1.0f..2.0f -> Text("Reizend, aber zulässig", color = colorResource(R.color.darkYellow))
+                                freeChlorine > 2.0f -> Text("Reizungen möglich", color = Color.Red)
+                            }
+                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
