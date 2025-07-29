@@ -24,4 +24,12 @@ object ApiClient {
     suspend fun getActualPoolWaterQuality(): HttpResponse {
         return httpClient.get("$BASE_URL/pool")
     }
+
+    suspend fun getActualSoilMoistureGreenHouse(): HttpResponse {
+        return httpClient.get("$BASE_URL/soilMoistureGreenhouse")
+    }
+
+    suspend fun getActualSoilMoistureVegetables(): HttpResponse {
+        return httpClient.get("$BASE_URL/soilMoistureVegetables")
+    }
 }

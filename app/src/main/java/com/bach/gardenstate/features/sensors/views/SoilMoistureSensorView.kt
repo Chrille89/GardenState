@@ -19,7 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bach.gardenstate.features.sensors.model.SoilMoistureSensorUIState
-import com.bach.gardenstate.features.sensors.viewmodel.SoilMoistureGreenHouseViewModel
+import com.bach.gardenstate.features.sensors.model.SoilMoistureType
+import com.bach.gardenstate.features.sensors.viewmodel.SoilMoistureViewModel
+import com.bach.gardenstate.features.sensors.viewmodel.SoilMoistureViewModelFactory
 import com.bach.gardenstate.ui.theme.GardenStateTheme
 import com.bach.gardenstate.utils.DateFormatter
 import kotlinx.datetime.Instant
@@ -28,12 +30,16 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @Composable
-fun SoilMoistureSensorGreenhouseView(
+fun SoilMoistureSensorView(
     modifier: Modifier = Modifier,
-    greenhouseViewModelSoilMoisture: SoilMoistureGreenHouseViewModel = viewModel()
+    soilMoistureType: SoilMoistureType,
+    soilMoistureViewModel: SoilMoistureViewModel = viewModel(
+        key = soilMoistureType.name,
+        factory = SoilMoistureViewModelFactory(soilMoistureType)
+    )
 ) {
     val soilMoistureSensorDataState: SoilMoistureSensorUIState =
-        greenhouseViewModelSoilMoisture.messageSoilMoistureSensor.value
+        soilMoistureViewModel.messageSoilMoisture.value
 
     Card(
         modifier
@@ -41,7 +47,7 @@ fun SoilMoistureSensorGreenhouseView(
             .padding(10.dp)
     ) {
         Text(
-            "Bodenfeuchte Gewächshaus",
+            soilMoistureViewModel.sensorTypeString,
             Modifier.padding(5.dp),
             style = MaterialTheme.typography.titleLarge
         )
@@ -135,6 +141,6 @@ fun SoilMoistureSensorGreenhouseView(
 @Preview
 fun SoilMoistureSensorGreenhousePreview() {
     GardenStateTheme {
-        SoilMoistureSensorGreenhouseView()
+        SoilMoistureSensorView(soilMoistureType = SoilMoistureType.VEGETABLES)
     }
 }
