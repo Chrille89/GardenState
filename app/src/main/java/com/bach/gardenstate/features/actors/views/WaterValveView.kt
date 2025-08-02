@@ -18,12 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.bach.gardenstate.features.actors.model.UIState
+import com.bach.gardenstate.features.actors.model.WaterValveUIState
 import com.bach.gardenstate.features.actors.model.WaterValveType
 import com.bach.gardenstate.features.actors.model.friendlyName
 import com.bach.gardenstate.features.actors.model.title
 import com.bach.gardenstate.features.actors.viewmodel.WaterValveViewModel
-import com.bach.gardenstate.features.actors.viewmodel.WaterValveViewModelFactory
+import com.bach.gardenstate.features.actors.viewmodel.ViewModelFactory
 import com.bach.gardenstate.ui.theme.GardenStateTheme
 import com.bach.gardenstate.utils.DateFormatter
 import kotlinx.datetime.Instant
@@ -37,7 +37,7 @@ fun WaterValveView(
     waterValveType: WaterValveType,
     waterValveViewModel: WaterValveViewModel = viewModel(
         key = waterValveType.friendlyName,
-        factory = WaterValveViewModelFactory(waterValveType.friendlyName)
+        factory = ViewModelFactory(waterValveType.friendlyName)
     ),
 ) {
 
@@ -51,15 +51,15 @@ fun WaterValveView(
             Modifier.padding(5.dp),
             style = MaterialTheme.typography.titleLarge
         )
-        when (val waterValveMessageState: UIState = waterValveViewModel.messageWaterValve.value) {
-            UIState.isLoading ->
+        when (val waterValveMessageState: WaterValveUIState = waterValveViewModel.messageWaterValve.value) {
+            WaterValveUIState.isLoading ->
                 Column(
                     Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) { CircularProgressIndicator() }
 
-            is UIState.success ->
+            is WaterValveUIState.success ->
                 Column(
                     modifier = Modifier.padding(5.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -70,11 +70,11 @@ fun WaterValveView(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("Bewässerung")
-                        val isChecked = waterValveViewModel.stateWaterValve.value
+                        val isChecked = waterValveViewModel.stateActor.value
                         Switch(
                             checked = isChecked,
                             onCheckedChange = {
-                                waterValveViewModel.onChangeWaterValveState(!isChecked)
+                                waterValveViewModel.onChangeState(!isChecked)
                             }
                         )
                     }

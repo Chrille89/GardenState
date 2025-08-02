@@ -23,7 +23,7 @@ class SoilMoistureViewModel(private var soilMoistureType: SoilMoistureType) : Vi
     val sensorTypeString: String
         get() = when (soilMoistureType) {
             SoilMoistureType.VEGETABLES -> "Bodenfeuchte Gemüse"
-            SoilMoistureType.GREENHOUSE -> "Bodennfeuchte Gewächshaus"
+            SoilMoistureType.GREENHOUSE -> "Bodenfeuchte Gewächshaus"
         }
 
     init {

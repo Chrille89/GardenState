@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.bach.gardenstate.R
 import com.bach.gardenstate.features.actors.model.WaterValveType
+import com.bach.gardenstate.features.actors.views.PoolPumpView
 import com.bach.gardenstate.features.actors.views.WaterValveView
 import com.bach.gardenstate.model.TabBarItem
 import com.bach.gardenstate.ui.views.navigation.TabView
@@ -56,6 +57,7 @@ fun ActorScreen(
         ) {
             WaterValveView(waterValveType = WaterValveType.VEGETABLES)
             WaterValveView(waterValveType = WaterValveType.GREENHOUSE)
+            PoolPumpView()
 
         }
     }
