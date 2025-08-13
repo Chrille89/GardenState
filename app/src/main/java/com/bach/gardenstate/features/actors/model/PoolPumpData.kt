@@ -4,9 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PoolPumpData(
+    var state: String,
     val power: Int,
     val voltage: Int,
-    var state: String,
+    val current: Int,
+    val energy: Float,
     val linkquality: Int,
     val last_seen: String
 )
