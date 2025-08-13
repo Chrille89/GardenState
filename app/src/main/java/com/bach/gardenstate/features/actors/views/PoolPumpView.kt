@@ -90,7 +90,7 @@ fun PoolPumpView(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Energieverbrauch")
+                        Text("Summe Energieverbrauch")
                         Text("${poolPumpMessageState.poolPumpData.energy} kWh")
                     }
                     Row(
