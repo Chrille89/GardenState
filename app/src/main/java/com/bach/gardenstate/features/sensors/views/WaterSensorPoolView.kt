@@ -1,6 +1,5 @@
 package com.bach.gardenstate.features.sensors.views
 
-import android.graphics.fonts.FontStyle
 import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -89,12 +87,16 @@ fun WaterSensorPoolView(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Row() {
-                                    Text("pH-Wert",modifier = Modifier
+                                Row {
+                                    Text("pH-Wert", modifier = Modifier
                                         .pointerInput(Unit) {
                                             detectTapGestures {
                                                 Toast
-                                                    .makeText(context, "Der pH-Wert beschreibt, wie sauer oder basisch dein Poolwasser ist. Er ist ein zentraler Parameter für die Wasserqualität, weil er viele andere Werte direkt beeinflusst – besonders die Wirksamkeit von Chlor und den Komfort für Haut, Augen und Technik.", Toast.LENGTH_LONG)
+                                                    .makeText(
+                                                        context,
+                                                        "Der pH-Wert beschreibt, wie sauer oder basisch dein Poolwasser ist. Er ist ein zentraler Parameter für die Wasserqualität, weil er viele andere Werte direkt beeinflusst – besonders die Wirksamkeit von Chlor und den Komfort für Haut, Augen und Technik.",
+                                                        Toast.LENGTH_LONG
+                                                    )
                                                     .show()
                                             }
                                         })
@@ -117,7 +119,7 @@ fun WaterSensorPoolView(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Row() {
+                        Row {
                             Text("Freies Chlor", modifier = Modifier
                                 .pointerInput(Unit) {
                                     detectTapGestures {
@@ -140,12 +142,24 @@ fun WaterSensorPoolView(
                             )
                         }
                         Column(horizontalAlignment = Alignment.End) {
-                            val freeChlorine = waterSensorPoolUIState.waterSensorPoolData.free_chlorine
+                            val freeChlorine =
+                                waterSensorPoolUIState.waterSensorPoolData.free_chlorine
                             Text("$freeChlorine ppm")
                             when {
-                                freeChlorine < 0.3f -> Text("Desinfektion unzureichend", color = colorResource(R.color.lightRed))
-                                freeChlorine in 1.0f..2.0f -> Text("Reizend, aber zulässig", color = colorResource(R.color.darkYellow))
-                                freeChlorine > 2.0f -> Text("Reizungen möglich", color = colorResource(R.color.lightRed))
+                                freeChlorine < 0.3f -> Text(
+                                    "Desinfektion unzureichend",
+                                    color = colorResource(R.color.lightRed)
+                                )
+
+                                freeChlorine in 1.0f..2.0f -> Text(
+                                    "Reizend, aber zulässig",
+                                    color = colorResource(R.color.darkYellow)
+                                )
+
+                                freeChlorine > 2.0f -> Text(
+                                    "Reizungen möglich",
+                                    color = colorResource(R.color.lightRed)
+                                )
                             }
                         }
                     }
@@ -153,7 +167,7 @@ fun WaterSensorPoolView(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Row() {
+                        Row {
                             Text("ORP-Wert", modifier = Modifier
                                 .pointerInput(Unit) {
                                     detectTapGestures {
@@ -179,9 +193,20 @@ fun WaterSensorPoolView(
                             val orp = waterSensorPoolUIState.waterSensorPoolData.orp
                             Text("$orp mV")
                             when {
-                                orp < 650 -> Text("Desinfektion unzureichend", color = colorResource(R.color.lightRed))
-                                orp in 750..850-> Text("Starkes Oxidationspotenzial", color = colorResource(R.color.darkYellow))
-                                orp > 850 -> Text("Reizungen möglich", color = colorResource(R.color.lightRed))
+                                orp < 650 -> Text(
+                                    "Desinfektion unzureichend",
+                                    color = colorResource(R.color.lightRed)
+                                )
+
+                                orp in 750..850 -> Text(
+                                    "Starkes Oxidationspotenzial",
+                                    color = colorResource(R.color.darkYellow)
+                                )
+
+                                orp > 850 -> Text(
+                                    "Reizungen möglich",
+                                    color = colorResource(R.color.lightRed)
+                                )
                             }
                         }
                     }
@@ -216,10 +241,25 @@ fun WaterSensorPoolView(
                             val salinity = waterSensorPoolUIState.waterSensorPoolData.salinity
                             Text("$salinity ppm")
                             when {
-                                salinity < 300 -> Text("Frischwasserqualität",  color = colorResource(R.color.lightBlue))
-                                salinity in 800..1500-> Text("Rückstände/Chemie", color = colorResource(R.color.darkYellow))
-                                salinity in 1500..2500-> Text("Rückspülen, Teilwasserwechsel prüfen", color = colorResource(R.color.orange))
-                                salinity > 2500 -> Text("Hohe Salz-/Leitwertbelastung, hygienisch fragwürdig",color = colorResource(R.color.lightRed))
+                                salinity < 300 -> Text(
+                                    "Frischwasserqualität",
+                                    color = colorResource(R.color.lightBlue)
+                                )
+
+                                salinity in 800..1500 -> Text(
+                                    "Rückstände/Chemie",
+                                    color = colorResource(R.color.darkYellow)
+                                )
+
+                                salinity in 1500..2500 -> Text(
+                                    "Rückspülen, Teilwasserwechsel prüfen",
+                                    color = colorResource(R.color.orange)
+                                )
+
+                                salinity > 2500 -> Text(
+                                    "Hohe Salz-/Leitwertbelastung, hygienisch fragwürdig",
+                                    color = colorResource(R.color.lightRed)
+                                )
                             }
                         }
                     }
@@ -257,6 +297,6 @@ fun WaterSensorPoolView(
 @Composable
 fun WaterSensorPoolPreview() {
     GardenStateTheme {
-        WaterSensorPoolView(Modifier, viewModel() )
+        WaterSensorPoolView(Modifier, viewModel())
     }
 }

@@ -4,15 +4,19 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.bach.gardenstate.MqttClientManager
-import com.bach.gardenstate.features.actors.model.WaterValveUIState
 import com.bach.gardenstate.features.actors.model.WaterValveData
+import com.bach.gardenstate.features.actors.model.WaterValveUIState
 
-class WaterValveViewModel(private val waterValveFriendlyName: String) : BaseViewModel(waterValveFriendlyName) {
+class WaterValveViewModel(private val waterValveFriendlyName: String) :
+    BaseViewModel(waterValveFriendlyName) {
 
     private val _messageWaterValve: MutableState<WaterValveUIState> = mutableStateOf(
         WaterValveUIState.isLoading
     )
     val messageWaterValve: State<WaterValveUIState> = _messageWaterValve
+
+    override val defaultMsOnTime: Long
+        get() = 1800000L // max 30 min.
 
     init {
         subscribe()

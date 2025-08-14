@@ -14,10 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bach.gardenstate.R
 import com.bach.gardenstate.features.sensors.model.SoilMoistureType
-import com.bach.gardenstate.features.sensors.viewmodel.SoilMoistureViewModelFactory
 import com.bach.gardenstate.features.sensors.views.SoilMoistureSensorView
 import com.bach.gardenstate.features.sensors.views.TemperatureSensorGreenhouseView
 import com.bach.gardenstate.features.sensors.views.WaterSensorPoolView

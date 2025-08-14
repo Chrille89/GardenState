@@ -10,9 +10,11 @@ class ViewModelFactory(private val actorFriendlyName: String) :
             modelClass.isAssignableFrom(WaterValveViewModel::class.java) -> {
                 WaterValveViewModel(actorFriendlyName) as T
             }
+
             modelClass.isAssignableFrom(PoolPumpViewModel::class.java) -> {
                 PoolPumpViewModel(actorFriendlyName) as T
             }
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     }

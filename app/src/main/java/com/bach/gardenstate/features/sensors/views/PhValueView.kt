@@ -65,14 +65,29 @@ fun PhValueView(modifier: Modifier = Modifier, actualPhValue: Int) {
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             when {
-                actualPhValue < 5 -> Text("Stark sauer – ätzend für Haut, Technik",color = colorResource(
-                    R.color.lightRed))
-                actualPhValue in 5 .. 6 -> Text("Noch zu sauer – Chlor aggressiv",color = colorResource(
-                    R.color.orange))
-                actualPhValue in 8 .. 9 -> Text("Leicht basisch – Chlor wirkt schlechter",color = colorResource(
-                    R.color.darkYellow))
-                actualPhValue > 9 -> Text("Zu basisch – Trübungen, Chlor fast wirkungslos",color = colorResource(
-                    R.color.lightRed))
+                actualPhValue < 5 -> Text(
+                    "Stark sauer – ätzend für Haut, Technik", color = colorResource(
+                        R.color.lightRed
+                    )
+                )
+
+                actualPhValue in 5..6 -> Text(
+                    "Noch zu sauer – Chlor aggressiv", color = colorResource(
+                        R.color.orange
+                    )
+                )
+
+                actualPhValue in 8..9 -> Text(
+                    "Leicht basisch – Chlor wirkt schlechter", color = colorResource(
+                        R.color.darkYellow
+                    )
+                )
+
+                actualPhValue > 9 -> Text(
+                    "Zu basisch – Trübungen, Chlor fast wirkungslos", color = colorResource(
+                        R.color.lightRed
+                    )
+                )
             }
         }
     }

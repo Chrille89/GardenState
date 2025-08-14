@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.bach.gardenstate.features.sensors.data.ApiClient
 import com.bach.gardenstate.features.sensors.model.TemperatureSensorData
 import com.bach.gardenstate.features.sensors.model.TemperatureSensorUIState
-import com.bach.gardenstate.features.sensors.model.WaterSensorPoolData
 import io.ktor.client.call.body
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json

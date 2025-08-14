@@ -69,13 +69,6 @@ fun PoolPumpView(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Leistungsaufnahme")
-                        Text("${poolPumpMessageState.poolPumpData.power} W")
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
                         Text("Spannungsversorgung")
                         Text("${poolPumpMessageState.poolPumpData.voltage} V")
                     }
@@ -85,6 +78,13 @@ fun PoolPumpView(
                     ) {
                         Text("Gemessener Strom")
                         Text("${poolPumpMessageState.poolPumpData.current} A")
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Leistungsaufnahme")
+                        Text("${poolPumpMessageState.poolPumpData.power} W")
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -100,7 +100,6 @@ fun PoolPumpView(
                         Text("Verbindungs-Qualität")
                         Text("${poolPumpMessageState.poolPumpData.linkquality}")
                     }
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween

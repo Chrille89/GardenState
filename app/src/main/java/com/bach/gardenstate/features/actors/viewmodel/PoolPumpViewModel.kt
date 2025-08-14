@@ -7,12 +7,16 @@ import com.bach.gardenstate.MqttClientManager
 import com.bach.gardenstate.features.actors.model.PoolPumpData
 import com.bach.gardenstate.features.actors.model.PoolPumpUIState
 
-class PoolPumpViewModel(private val poolPumpFriendlyName: String) : BaseViewModel(poolPumpFriendlyName) {
+class PoolPumpViewModel(private val poolPumpFriendlyName: String) :
+    BaseViewModel(poolPumpFriendlyName) {
 
     private val _messagePoolPump: MutableState<PoolPumpUIState> = mutableStateOf(
         PoolPumpUIState.isLoading
     )
     val messagePoolPump: State<PoolPumpUIState> = _messagePoolPump
+
+    override val defaultMsOnTime: Long
+        get() = 14400000 // max 4h
 
     init {
         subscribe()
