@@ -8,5 +8,5 @@ data class SoilMoistureSensorData(
     val last_seen: String,
     val linkquality: Int,
     val soil_moisture: Int,
-    val temperature: Int
+    val temperature: Float
 )

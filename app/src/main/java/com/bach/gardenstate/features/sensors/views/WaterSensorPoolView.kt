@@ -94,7 +94,7 @@ fun WaterSensorPoolView(
                                                 Toast
                                                     .makeText(
                                                         context,
-                                                        "Der pH-Wert beschreibt, wie sauer oder basisch dein Poolwasser ist. Er ist ein zentraler Parameter für die Wasserqualität, weil er viele andere Werte direkt beeinflusst – besonders die Wirksamkeit von Chlor und den Komfort für Haut, Augen und Technik.",
+                                                        "Der pH-Wert beschreibt, wie sauer oder basisch dein Poolwasser ist. Er ist ein zentraler Parameter für die Wasserqualität, weil er die Wirksamkeit von Chlor und den Komfort für Haut, Augen und Technik direkt beeinflusst. Optimal: 7,2 – 7,4.",
                                                         Toast.LENGTH_LONG
                                                     )
                                                     .show()
@@ -120,61 +120,13 @@ fun WaterSensorPoolView(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Row {
-                            Text("Freies Chlor", modifier = Modifier
-                                .pointerInput(Unit) {
-                                    detectTapGestures {
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                "Freies (aktives) Chlor ist der wichtigste Messwert zur Desinfektion im Schwimmbecken. Es zeigt an, wie viel wirksames Chlor aktuell im Wasser vorhanden ist – also Chlor, das Bakterien, Viren und Algen sofort abtöten kann.",
-                                                Toast.LENGTH_LONG
-                                            )
-                                            .show()
-                                    }
-                                })
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = "Mehr Informationen",
-                                tint = Color.Gray,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(start = 4.dp)
-                            )
-                        }
-                        Column(horizontalAlignment = Alignment.End) {
-                            val freeChlorine =
-                                waterSensorPoolUIState.waterSensorPoolData.free_chlorine
-                            Text("$freeChlorine ppm")
-                            when {
-                                freeChlorine < 0.3f -> Text(
-                                    "Desinfektion unzureichend",
-                                    color = colorResource(R.color.lightRed)
-                                )
-
-                                freeChlorine in 1.0f..2.0f -> Text(
-                                    "Reizend, aber zulässig",
-                                    color = colorResource(R.color.darkYellow)
-                                )
-
-                                freeChlorine > 2.0f -> Text(
-                                    "Reizungen möglich",
-                                    color = colorResource(R.color.lightRed)
-                                )
-                            }
-                        }
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row {
                             Text("ORP-Wert", modifier = Modifier
                                 .pointerInput(Unit) {
                                     detectTapGestures {
                                         Toast
                                             .makeText(
                                                 context,
-                                                "Der ORP-Wert misst in Millivolt (mV), wie stark das Wasser oxidierend ist – also wie gut es organische Stoffe (z.B. Bakterien, Viren, Algen) zerstören kann. (Desinfektionskraft)",
+                                                "Der ORP-Wert misst, wie stark das Wasser oxidierend ist – also wie gut es organische Stoffe (z.B. Bakterien, Viren, Algen) zerstören kann (Desinfektionskraft). Er sollte zwischen 650-750mV liegen.",
                                                 Toast.LENGTH_LONG
                                             )
                                             .show()
@@ -221,7 +173,7 @@ fun WaterSensorPoolView(
                                         Toast
                                             .makeText(
                                                 context,
-                                                "Der Salzgehalt im Poolwasser gibt an, wie viel gelöstes Salz (meist Natriumchlorid, NaCl) sich im Wasser befindet – in der Regel gemessen in ppm (parts per million) oder mg/l.",
+                                                "Der Salzgehalt beeinflusst Hautverträglichkeit, Wassergefühl, Korrosionsrisiken und Sensorgenauigkeit. Er sollte zwischen 200–800 ppm liegen.",
                                                 Toast.LENGTH_LONG
                                             )
                                             .show()
