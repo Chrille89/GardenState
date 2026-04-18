@@ -14,12 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.bach.gardenstate.features.sensors.model.TemperatureSensorType
 import com.bach.gardenstate.features.sensors.model.TemperatureSensorUIState
+import com.bach.gardenstate.features.sensors.model.endpoint
+import com.bach.gardenstate.features.sensors.model.title
 import com.bach.gardenstate.features.sensors.viewmodel.TemperatureSensorViewModel
-import com.bach.gardenstate.ui.theme.GardenStateTheme
+import com.bach.gardenstate.features.sensors.viewmodel.TemperatureSensorViewModelFactory
 import com.bach.gardenstate.utils.DateFormatter
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -27,10 +29,14 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @Composable
-fun TemperatureSensorGreenhouseView(
+fun TemperatureSensorView(
     modifier: Modifier = Modifier,
-    temperatureSensorViewModel: TemperatureSensorViewModel = viewModel()
-) {
+    temperatureSensorType: TemperatureSensorType,
+    temperatureSensorViewModel: TemperatureSensorViewModel = viewModel(
+        key = temperatureSensorType.endpoint,
+        factory = TemperatureSensorViewModelFactory(temperatureSensorType.endpoint)
+    )
+    ) {
     val temperatureSensorUIState: TemperatureSensorUIState =
         temperatureSensorViewModel.messageTemperatureSensor.value
 
@@ -40,7 +46,7 @@ fun TemperatureSensorGreenhouseView(
             .padding(10.dp)
     ) {
         Text(
-            "Temperatur Gewächshaus",
+            temperatureSensorType.title,
             Modifier.padding(5.dp),
             style = MaterialTheme.typography.titleLarge
         )
@@ -112,13 +118,5 @@ fun TemperatureSensorGreenhouseView(
                 }
         }
 
-    }
-}
-
-@Preview
-@Composable
-fun TemperatureSensorGreenhousePreview() {
-    GardenStateTheme {
-        TemperatureSensorGreenhouseView()
     }
 }

@@ -12,7 +12,7 @@ import io.ktor.client.call.body
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
-class TemperatureSensorGreenhouseViewModel : ViewModel() {
+class TemperatureSensorViewModel(private val endpoint: String) : ViewModel() {
     private val withUnknownKeys = Json { ignoreUnknownKeys = true }
     private val _messageTemperatureSensor: MutableState<TemperatureSensorUIState> = mutableStateOf(
         TemperatureSensorUIState.isLoading
@@ -21,7 +21,7 @@ class TemperatureSensorGreenhouseViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            val httpResponse = ApiClient.getActualTemperature()
+            val httpResponse = ApiClient.getActualTemperature(endpoint)
             when (httpResponse.status.value) {
                 200 -> _messageTemperatureSensor.value =
                     TemperatureSensorUIState.success(

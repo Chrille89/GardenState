@@ -17,8 +17,8 @@ object ApiClient {
         }
     }
 
-    suspend fun getActualTemperature(): HttpResponse {
-        return httpClient.get("$BASE_URL/temperature-greenhouse")
+    suspend fun getActualTemperature(path: String): HttpResponse {
+        return httpClient.get("$BASE_URL/temperature/$path")
     }
 
     suspend fun getActualPoolWaterQuality(): HttpResponse {
