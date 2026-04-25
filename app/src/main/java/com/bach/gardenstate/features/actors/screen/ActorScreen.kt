@@ -56,7 +56,7 @@ fun ActorScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             WaterValveView(waterValveType = WaterValveType.VEGETABLES)
-           // WaterValveView(waterValveType = WaterValveType.GREENHOUSE)
+            WaterValveView(waterValveType = WaterValveType.GREENHOUSE)
             WaterValveView(waterValveType = WaterValveType.RAISED_BED)
            // PoolPumpView()
 

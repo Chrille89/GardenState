@@ -16,7 +16,7 @@ class WaterValveViewModel(private val waterValveFriendlyName: String) :
     val messageWaterValve: State<WaterValveUIState> = _messageWaterValve
 
     override val defaultMsOnTime: Long
-        get() = 1800000 // max 30 min.
+        get() = 600000 // max 10 min.
 
     init {
         subscribe()

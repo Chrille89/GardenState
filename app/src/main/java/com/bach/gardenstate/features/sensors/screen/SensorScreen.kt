@@ -60,11 +60,10 @@ fun SensorScreen(
                 .padding(paddings)
                 .verticalScroll(rememberScrollState())
         ) {
-            SoilMoistureSensorView(soilMoistureType = SoilMoistureType.VEGETABLES)
-            SoilMoistureSensorView(soilMoistureType = SoilMoistureType.GREENHOUSE)
+          //  SoilMoistureSensorView(soilMoistureType = SoilMoistureType.VEGETABLES)
+          //  SoilMoistureSensorView(soilMoistureType = SoilMoistureType.GREENHOUSE)
             TemperatureSensorView(temperatureSensorType = TemperatureSensorType.GREENHOUSE)
             TemperatureSensorView(temperatureSensorType = TemperatureSensorType.FOILTENT)
-
             WaterSensorPoolView()
         }
     }
