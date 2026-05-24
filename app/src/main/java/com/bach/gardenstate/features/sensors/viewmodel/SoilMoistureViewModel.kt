@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bach.gardenstate.features.sensors.data.ApiClient
+import com.bach.gardenstate.features.data.ApiClient
 import com.bach.gardenstate.features.sensors.model.SoilMoistureSensorData
 import com.bach.gardenstate.features.sensors.model.SoilMoistureSensorUIState
 import com.bach.gardenstate.features.sensors.model.SoilMoistureType

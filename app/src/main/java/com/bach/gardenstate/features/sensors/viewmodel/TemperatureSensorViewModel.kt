@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bach.gardenstate.features.sensors.data.ApiClient
+import com.bach.gardenstate.features.data.ApiClient
 import com.bach.gardenstate.features.sensors.model.TemperatureSensorData
 import com.bach.gardenstate.features.sensors.model.TemperatureSensorUIState
 import io.ktor.client.call.body

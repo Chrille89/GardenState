@@ -1,10 +1,14 @@
-package com.bach.gardenstate.features.sensors.data
+package com.bach.gardenstate.features.data
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
+import io.ktor.client.request.patch
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 
 
@@ -14,6 +18,23 @@ object ApiClient {
     private val httpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
+        }
+    }
+
+    suspend fun getAutomaticIrrigation(): HttpResponse {
+        return httpClient.get("$BASE_URL/irrigation")
+    }
+
+    suspend fun patchAutomaticIrrigation(irrigation: Boolean): HttpResponse {
+        return httpClient.patch("$BASE_URL/irrigation") {
+            contentType(ContentType.Application.Json)
+            setBody(
+                """
+            {
+                "enabled": "$irrigation"
+            }
+            """.trimIndent()
+            )
         }
     }
 

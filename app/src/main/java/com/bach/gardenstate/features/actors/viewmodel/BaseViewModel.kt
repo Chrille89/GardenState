@@ -7,6 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bach.gardenstate.MqttClientManager
+import com.bach.gardenstate.features.actors.model.AutomaticIrrigationData
+import com.bach.gardenstate.features.data.ApiClient
+import com.bach.gardenstate.features.sensors.model.TemperatureSensorData
+import com.bach.gardenstate.features.sensors.model.TemperatureSensorUIState
+import io.ktor.client.call.body
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
